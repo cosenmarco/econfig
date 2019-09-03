@@ -1,5 +1,11 @@
-import { sortBy, find } from 'lodash/fp';
-import ConfigValue from './ConfigValue'
+import { filter, sortBy } from 'lodash/fp';
+import ConfigValue, { ResolvedConfigValue } from './ConfigValue'
+
+export interface ResolvedConfigKey {
+    key: string;
+    description: string;
+    values: ResolvedConfigValue[];
+}
 
 export default class ConfigKey {
     private _key: string;
@@ -9,15 +15,21 @@ export default class ConfigKey {
     constructor(key: string, description: string, values: ConfigValue[]) {
         this._key = key;
         this.description = description;
-        this.values = sortBy(['staticDimensionValuesLength'], values);
+        this.values = sortBy(['staticDimensionValuesLength'], values).reverse();
     }
 
     get key() {
         return this._key;
     }
 
-    findBestValueForStaticDimensionValues(staticDimensionValues: Map<string, string>) {
-        return find(value => value.staticDimensionValuesLength == 0 ? true : value.areAllStaticDimensionsMatching(staticDimensionValues),
-            this.values);
+    public resolveUsing(staticDimensionValues: Map<string, any>): ResolvedConfigKey {
+        return {
+            key: this.key,
+            description: this.description,
+            values: filter(value =>
+                value.staticDimensionValuesLength === 0 ||
+                value.areAllStaticDimensionsMatching(staticDimensionValues),
+            this.values),
+        };
     }
 }

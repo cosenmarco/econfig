@@ -1,0 +1,7 @@
+---
+configStore: url
+configStoreConfig:
+  url: https://github.com/cosenmarco/econfig
+auditBackend: '/dev/null'
+configApiAuthStore: none 
+refreshIntervalMillis: 1500

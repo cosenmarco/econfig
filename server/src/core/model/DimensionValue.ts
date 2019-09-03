@@ -2,9 +2,9 @@ import Dimension from './Dimension'
 
 export default class DimensionValue {
     private dimension: Dimension;
-    private value: string;
+    private value: any;
 
-    constructor(dimension: Dimension, value: string) {
+    constructor(dimension: Dimension, value: any) {
         this.dimension = dimension;
         this.value = value;
     }

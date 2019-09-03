@@ -1,19 +1,21 @@
 import {all, partition} from 'lodash/fp';
-import DimensionValue from './DimensionValue'
+import DimensionValue from './DimensionValue';
 
-export default class ConfigValue {
-    private id: string;
-    private value: any;
-    private _staticDimensionValues: Array<DimensionValue>;
-    private _dynamicDimensionValues: Array<DimensionValue>;
+export interface ResolvedConfigValue {
+    value: any;
+    dynamicDimensionValues: DimensionValue[];
+}
 
-    constructor(id: string, value: any, dimensionValues: Array<DimensionValue>) {
-        this.id = id;
-        this.value = value;
+export default class ConfigValue implements ResolvedConfigValue {
+    private _value: any;
+    private _staticDimensionValues: DimensionValue[];
+    private _dynamicDimensionValues: DimensionValue[];
+
+    constructor(value: any, dimensionValues: DimensionValue[]) {
+        this._value = value;
         // Builds two maps by partitioning according to type of dimension
-        [this._staticDimensionValues, this._dynamicDimensionValues] = partition(
-            (value: DimensionValue) => value.isDynamicDimension()
-        )(dimensionValues);
+        [this._dynamicDimensionValues, this._staticDimensionValues] = partition(
+            (val: DimensionValue) => val.isDynamicDimension(), dimensionValues);
     }
 
     get staticDimensionValuesLength() {
@@ -28,11 +30,15 @@ export default class ConfigValue {
         return this._dynamicDimensionValues;
     }
 
-    areAllStaticDimensionsMatching(valuesToMatch: Map<string, any>) {
+    get value() {
+        return this._value;
+    }
+
+    public areAllStaticDimensionsMatching(valuesToMatch: Map<string, any>) {
         return all((staticDimensionValue: DimensionValue) => {
             const dimensionId = staticDimensionValue.dimensionId;
             return valuesToMatch.has(dimensionId) &&
-                staticDimensionValue.matches(valuesToMatch.get(dimensionId))
-        })(this._staticDimensionValues);
+                staticDimensionValue.matches(valuesToMatch.get(dimensionId));
+        }, this._staticDimensionValues);
     }
 }

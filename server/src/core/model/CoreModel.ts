@@ -1,24 +1,22 @@
-import Component from './Component'
-import Dimension from './Dimension'
+import Component from './Component';
+import Dimension from './Dimension';
 
-class CoreModel {
-    components: Map<string, Component>;
-    dimensions: Array<Dimension>;
+export default class CoreModel {
+    private components: Map<string, Component>;
+    private dimensions: Dimension[];
 
-    constructor(components: Array<Component>, dimensions: Array<Dimension>) {
+    constructor(components: Component[], dimensions: Dimension[]) {
         // Index the components by id so it's easier to find them.
-        this.components = new Map(
-            components.map(item => [item.id, item])
-        );
+        this.components = new Map(components.map(item => [item.id, item]));
         this.dimensions = dimensions;
     }
 
     /**
-     * Returns the configuration keys resolved for a certain component and dimension values.
-     */ 
-    public resolveConfiguration(componentId: string, staticDimensionValues: Map<string, string>) {
+     * Returns the configuration keys resolved for a certain component and static dimension values.
+     */
+    public resolveConfiguration(componentId: string, staticDimensionValues: Map<string, any>) {
         if (!this.components.has(componentId)) {
-            return null;
+            return undefined;
         }
         const component = this.components.get(componentId);
     }

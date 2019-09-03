@@ -1,0 +1,11 @@
+{
+    "mocha.subdirectory": "server/",
+    "mocha.requires": [
+        "ts-node/register"
+    ],
+    "mocha.nycPath": "node_modules/.bin/nyc",
+    "tslint.packageManager": "yarn",
+    "cSpell.words": [
+        "eigen"
+    ]
+}

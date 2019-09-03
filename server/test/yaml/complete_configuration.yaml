@@ -1,0 +1,45 @@
+version: 0.1
+components:
+  - id: server1
+    description: "The central server of the whole Internet"
+    dimensions:
+      - id: region
+        description: "The AWS region in which the service could run"
+        dynamic: false
+        type: string
+        #values: [us-east-1, eu-central-1, eu-central-2] # Could use to check values in config definitions and let config requests fail
+      - id: userId
+        description: "The user id"
+        dynamic: true
+        type: percent
+      - id: dayOfWeek
+        description: "The current day of the week"
+        dynamic: true
+        type: string
+    keys:
+      - key: request.timeout
+        description: "Time in milliseconds before a TCP connect attempt is considered failed"
+        type: number
+        values:
+          - value: 1000
+          - dimensions:
+              - { dimension: region, value: us-east-1 }
+            value: 300
+          - dimensions:
+              - { dimension: region, value: eu-central-2 }
+            value: 300
+          - dimensions:
+              - { dimension: region, value: eu-central-2 }
+              - { dimension: dayOfWeek, value: sunday }
+            value: 200
+      - key: feature.cashmaker.enabled
+        description: "The feature that makes cash out of nothing"
+        type: boolean
+        values:
+          - value: false
+          - dimensions:
+            # Multiple dimensions are treated as AND
+            - { dimension: userId, value: 0.025 } # This means apply to the 2.5% of the users
+            - { dimension: region, value: eu-central-1 }
+            value: true
+            

@@ -2,7 +2,7 @@ import ConfigValue from './ConfigValue'
 import DimensionValue from './DimensionValue'
 
 import {expect} from 'chai'
-import { Mock } from 'ts-mockery';
+import { Mock } from 'ts-mockery'
 
 
 describe('ConfigValue', () => {
@@ -18,13 +18,42 @@ describe('ConfigValue', () => {
     })
     
     it('has static and dynamic dimension values', () => {
-        const configValue = new ConfigValue("testValue", 999, testDimensionValues);
+        const configValue = new ConfigValue(999, testDimensionValues);
+
         expect(configValue.staticDimensionValuesLength).to.equal(2);
+
+        expect(configValue.dynamicDimensionValues).to.have.property('length').equal(2);
+        expect(configValue.dynamicDimensionValues).to.contain(testDimensionValues[0]);
+        expect(configValue.dynamicDimensionValues).to.contain(testDimensionValues[1]);
+
+        expect(configValue.staticDimensionValues).to.have.property('length').equal(2);
+        expect(configValue.staticDimensionValues).to.contain(testDimensionValues[2]);
+        expect(configValue.staticDimensionValues).to.contain(testDimensionValues[3]);
+    });
+
+    it('can tell if all static dimension values match a certain map', () => {
+        const configValue = new ConfigValue(999, testDimensionValues);
+        const testMap = new Map<string, any>([
+            ["dim2", "test2"],
+            ["dim3", 4321],
+            // Note: an additional unknown dimension doesn't compromise match
+            ["dim4", 8888] 
+        ]);
+
+        expect(configValue.areAllStaticDimensionsMatching(testMap)).to.equal(true);
+    });
+  
+    it('can tell if some static dimension values do not match a certain map', () => {
+        const configValue = new ConfigValue(999, testDimensionValues);
+        const testMap = new Map<string, any>([["dim2", "wrong"], ["dim3", 4321]]);
+
+        expect(configValue.areAllStaticDimensionsMatching(testMap)).to.equal(false);
     });
 });
 
 function buildMockDimensionValue(dimensionId: string, isDynamic: boolean, value: any) {
     return Mock.of <DimensionValue>({
+        dimensionId: dimensionId,
         isDynamicDimension: () => isDynamic,
         matches: (what: any) => what == value
     });
