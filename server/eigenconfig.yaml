@@ -1,7 +1,8 @@
 ---
-configStore: url
-configStoreConfig:
-  url: https://github.com/cosenmarco/econfig
-auditBackend: '/dev/null'
+configRepositoryType: url
+configRepositoryConfig:
+  url: https://raw.githubusercontent.com/cosenmarco/econfig/master/server/test/yaml/complete_configuration.yaml
+  format: yaml
+auditBackend: /dev/null
 configApiAuthStore: none 
 refreshIntervalMillis: 1500

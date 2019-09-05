@@ -6,6 +6,7 @@
     "mocha.nycPath": "node_modules/.bin/nyc",
     "tslint.packageManager": "yarn",
     "cSpell.words": [
-        "eigen"
+        "eigen",
+        "jsyaml"
     ]
 }

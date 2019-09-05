@@ -1,22 +1,25 @@
 import { IsIn, validateOrReject } from 'class-validator';
 import jsyaml from 'js-yaml';
 import { isObject } from 'util';
+import logValidationErrors from '../../util/validationErrorsLogger';
 
 export class EigenConfig {
     @IsIn(['url'])
-    public configStore?: string;
+    public configRepositoryType = '';
+    public configRepositoryConfig = {};
 
-    public configStoreConfig?: any;
-    public auditBackend?: string;
-    public auditBackendConfig?: any;
-    public configApiAuthStore?: string;
-    public configApiAuthStoreConfig?: any;
-    public refreshIntervalMillis?: number;
+    public auditBackend = '';
+    public auditBackendConfig = {};
+
+    public configApiAuthStore = '';
+    public configApiAuthStoreConfig = {};
+
+    public refreshIntervalMillis = 0;
 
     public constructor(yamlConfig: any) {
         if (isObject(yamlConfig)) {
-            this.configStore = yamlConfig.configStore;
-            this.configStoreConfig = yamlConfig.configStoreConfig;
+            this.configRepositoryType = yamlConfig.configRepositoryType;
+            this.configRepositoryConfig = yamlConfig.configRepositoryConfig;
             this.auditBackend = yamlConfig.auditBackend;
             this.auditBackendConfig = yamlConfig.auditBackendConfig;
             this.configApiAuthStore = yamlConfig.configApiAuthStore;
@@ -29,5 +32,9 @@ export class EigenConfig {
 export async function parseValidEigenConfig(configFileContent: string) {
     const configYaml = jsyaml.safeLoad(configFileContent);
     const eigenConfig = new EigenConfig(configYaml);
-    return validateOrReject(eigenConfig, { forbidUnknownValues: true }).then(() => eigenConfig);
+    await validateOrReject(eigenConfig, { forbidUnknownValues: true }).catch (errors => {
+        logValidationErrors(errors, '<root>');
+        return Promise.reject('Error while validating eigenconfig. Cannot continue.');
+    });
+    return eigenConfig;
 }

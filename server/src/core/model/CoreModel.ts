@@ -1,14 +1,11 @@
 import Component from './Component';
-import Dimension from './Dimension';
 
 export default class CoreModel {
     private components: Map<string, Component>;
-    private dimensions: Dimension[];
 
-    constructor(components: Component[], dimensions: Dimension[]) {
+    constructor(components: Component[]) {
         // Index the components by id so it's easier to find them.
         this.components = new Map(components.map(item => [item.id, item]));
-        this.dimensions = dimensions;
     }
 
     /**

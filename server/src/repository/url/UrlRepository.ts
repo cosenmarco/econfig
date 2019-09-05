@@ -1,5 +1,8 @@
-import { Service } from 'typedi';
+import jsyaml from 'js-yaml';
+import request from 'request-promise-native';
+import { inspect } from 'util';
 import CoreModel from '../../core/model/CoreModel';
+import logger from '../../logger';
 import Repository from '../Repository';
 
 /**
@@ -11,23 +14,39 @@ import Repository from '../Repository';
  * - url - A string with the URL to download the model from.
  * - format - either "json" or "yaml" to indicate how to parse the resource
  */
-@Service('urlRepository')
 export class UrlRepository implements Repository {
     private reconfigured = false;
     private configuration: any;
 
-    public setConfiguration(configuration: any): void {
-        this.reconfigured = true;
+    public constructor(configuration: any) {
         this.configuration = configuration;
     }
 
-    public buildCoreModel() {
-        this.reconfigured = false;
-        throw new Error('Method not implemented.');
+    public async buildCoreModel() {
+        const url = this.configuration.url;
+        return request.get(url).then(content => {
+            let json = {};
+            switch (this.configuration.format) {
+                case 'json':
+                    json = JSON.parse(content);
+                    break;
+                case 'yaml':
+                    json = jsyaml.safeLoad(content);
+                    break;
+                default:
+                    throw new Error('Unknown format to parse CoreModel from URL');
+            }
+            logger.debug(`Loaded object from URL '${url}' is: ${inspect(json)}`);
+            return this.buildModelFromJson(json);
+        });
     }
 
     public shouldReload() {
-        return this.reconfigured; // OR (TODO) Model really changed.
+        return true;
+    }
+
+    private buildModelFromJson(json: object) {
+        return new CoreModel([]);
     }
 
 }
