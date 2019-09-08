@@ -61,8 +61,8 @@
                     "type": "boolean"
                 },
                 "type": {
-                    "description": "The type of dimension",
-                    "type": "string"
+                    "description": "The type of values this dimension can assume",                    
+                    "enum": ["string", "percent"]
                 }
             }
         },
@@ -81,7 +81,8 @@
                     "type": "string"
                 },
                 "type": {
-                    "enum": ["string", "percent"]
+                    "description": "The type of values this key holds",
+                    "type": "string"
                 },
                 "values": {
                     "description": "The values associated to the key",
@@ -110,10 +111,7 @@
                     "type": "string",
                     "description": "The id of the dimension we're referencing to"
                 },
-                "value": {
-                    "type": "string",
-                    "description": "The value to match against when resolving the configuration"
-                }
+                "value": {}
             },
             "required": [ "value" ]
         }

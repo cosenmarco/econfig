@@ -1,6 +1,5 @@
 import { validateOrReject } from 'class-validator';
 import logValidationErrors from '../util/validationErrorsLogger';
-import Repository from './Repository';
 import { UrlRepository } from './url/UrlRepository';
 import { UrlRepositoryConfig } from './url/UrlRepositoryConfig';
 

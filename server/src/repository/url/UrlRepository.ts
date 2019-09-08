@@ -9,7 +9,7 @@ import { UrlRepositoryConfig } from './UrlRepositoryConfig';
 /**
  * This Repository loads a serialized model config from a URL and produces
  * a CoreModel accordingly.
- * The shouldReload() will try to use caching headers to understand if the
+ * The shouldReload() will try (TODO) to use caching headers to understand if the
  * resource has expired.
  * The configuration will have to contain the following properties:
  * - url - A string with the URL to download the model from.
@@ -25,6 +25,7 @@ export class UrlRepository implements Repository {
     public async buildCoreModel() {
         const url = this.configuration.url;
         return request.get(url).then(content => {
+            logger.debug(`Loaded content from URL '${url}' is:\n${content}`);
             let json = {};
             switch (this.configuration.format) {
                 case 'json':
@@ -36,7 +37,7 @@ export class UrlRepository implements Repository {
                 default:
                     throw new Error('Unknown format to parse CoreModel from URL');
             }
-            logger.debug(`Loaded object from URL '${url}' is: ${inspect(json)}`);
+            logger.silly(`Loaded object from URL '${url}' is: ${inspect(json)}`);
             return this.buildModelFromJson(json);
         });
     }
