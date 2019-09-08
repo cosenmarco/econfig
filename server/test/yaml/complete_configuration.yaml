@@ -1,4 +1,4 @@
-version: 0.1
+version: '0.1'
 components:
   - id: server1
     description: "The central server of the whole Internet"
@@ -7,7 +7,7 @@ components:
         description: "The AWS region in which the service could run"
         dynamic: false
         type: string
-        #values: [us-east-1, eu-central-1, eu-central-2] # Could use to check values in config definitions and let config requests fail
+        #values: [us-east-1, eu-central-1, eu-central-2] # Could be used to check values in config definitions and let config requests fail
       - id: userId
         description: "The user id"
         dynamic: true

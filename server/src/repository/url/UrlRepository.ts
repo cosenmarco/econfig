@@ -1,9 +1,10 @@
 import jsyaml from 'js-yaml';
 import request from 'request-promise-native';
 import { inspect } from 'util';
-import CoreModel from '../../core/model/CoreModel';
 import logger from '../../logger';
+import coreModelFactory from '../coreModelFactory';
 import Repository from '../Repository';
+import { UrlRepositoryConfig } from './UrlRepositoryConfig';
 
 /**
  * This Repository loads a serialized model config from a URL and produces
@@ -15,10 +16,9 @@ import Repository from '../Repository';
  * - format - either "json" or "yaml" to indicate how to parse the resource
  */
 export class UrlRepository implements Repository {
-    private reconfigured = false;
-    private configuration: any;
+    private configuration: UrlRepositoryConfig;
 
-    public constructor(configuration: any) {
+    public constructor(configuration: UrlRepositoryConfig) {
         this.configuration = configuration;
     }
 
@@ -46,7 +46,6 @@ export class UrlRepository implements Repository {
     }
 
     private buildModelFromJson(json: object) {
-        return new CoreModel([]);
+        return coreModelFactory(json);
     }
-
 }

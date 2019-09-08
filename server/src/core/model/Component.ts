@@ -15,7 +15,7 @@ export default class Component {
         return this._id;
     }
 
-    public resolveUsing(staticDimensionValues: Map<string,any>): ResolvedConfigKey[] {
+    public resolveUsing(staticDimensionValues: Map<string, any>): ResolvedConfigKey[] {
         return this.configKeys
             .map(configKey => configKey.resolveUsing(staticDimensionValues));
     }

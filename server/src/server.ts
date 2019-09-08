@@ -12,7 +12,7 @@ import createRepository from './repository/RepositoryFactory';
  */
 class Server {
     private eigenConfig: EigenConfig;
-    private refreshHandler = 0;
+    private refreshHandler?: NodeJS.Timeout;
     private coreModel?: CoreModel;
     private repository?: Repository;
 
@@ -25,8 +25,12 @@ class Server {
 
         this.repository = await createRepository(this.eigenConfig.configRepositoryType,
             this.eigenConfig.configRepositoryConfig);
-        this.refreshHandler = setInterval(this.triggerConfigReload);
+
+        // If we can't load even the first time, better fail fast.
         await this.triggerConfigReload();
+
+        this.refreshHandler = setInterval(() => this.triggerConfigReload()
+            .catch(error => logger.error(error)), this.eigenConfig.refreshIntervalMillis);
     }
 
     public async triggerConfigReload() {
@@ -36,7 +40,9 @@ class Server {
     }
 
     public stop() {
-        clearInterval(this.refreshHandler);
+        if (this.refreshHandler) {
+            clearInterval(this.refreshHandler);
+        }
     }
 }
 
