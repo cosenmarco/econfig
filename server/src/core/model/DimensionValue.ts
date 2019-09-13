@@ -18,7 +18,7 @@ export default class DimensionValue {
         return this.dimension.isDynamic();
     }
 
-    public matches(value: any) {
-        return this.value === value;
+    public matches(incoming: any) {
+        return this.dimension.matchValue(incoming, this.value);
     }
 }

@@ -36,7 +36,7 @@ class Server {
     public async triggerConfigReload() {
         if (this.repository && this.repository.shouldReload()) {
             this.coreModel = await this.repository.buildCoreModel();
-            logger.silly(inspect(this.coreModel));
+            logger.silly(inspect(this.coreModel, true, 9));
         }
     }
 

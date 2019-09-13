@@ -54,4 +54,19 @@ export class Dimension {
                 break;
         }
     }
+
+    /**
+     * This method helps matching a dimension value in the model (known)
+     * against a value incoming from the outside while resolving the configuration.
+     * @param incoming The value coming from outside during a matching operation
+     * @param known The known DimensionValue
+     */
+    public matchValue(incoming: any, known: any) {
+        switch (this.type) {
+            case DimensionType.percent:
+                return isNumber(incoming) && Math.random() <= known;
+            case DimensionType.string:
+                return isString(incoming) && known === incoming;
+        }
+    }
 }

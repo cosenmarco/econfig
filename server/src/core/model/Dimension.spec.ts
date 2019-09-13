@@ -51,4 +51,12 @@ describe('Dimension', () => {
             }
         });
     });
+
+    it('matches correctly a string value', () => {
+        const dim = new Dimension('test_id', 'test_desc', false, 'string');
+        // tslint:disable: no-unused-expression
+        expect(dim.matchValue('test_val', 'test_val')).to.be.true;
+        expect(dim.matchValue('test_val', 'test_other_val')).to.be.false;
+        // tslint:enable: no-unused-expression
+    });
 });
