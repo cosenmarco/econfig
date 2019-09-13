@@ -1,22 +1,21 @@
-import ConfigValue from './ConfigValue'
-import DimensionValue from './DimensionValue'
+import ConfigValue from './ConfigValue';
+import DimensionValue from './DimensionValue';
 
-import {expect} from 'chai'
-import { Mock } from 'ts-mockery'
-
+import {expect} from 'chai';
+import { Mock } from 'ts-mockery';
 
 describe('ConfigValue', () => {
-    let testDimensionValues: Array<DimensionValue>;
+    let testDimensionValues: DimensionValue[];
 
     before(() => {
         testDimensionValues  = [
-            buildMockDimensionValue("dim0", true, "test0"),
-            buildMockDimensionValue("dim1", true, 1234),
-            buildMockDimensionValue("dim2", false, "test2"),
-            buildMockDimensionValue("dim3", false, 4321)
-        ]
-    })
-    
+            buildMockDimensionValue('dim0', true, 'test0'),
+            buildMockDimensionValue('dim1', true, 1234),
+            buildMockDimensionValue('dim2', false, 'test2'),
+            buildMockDimensionValue('dim3', false, 4321),
+        ];
+    });
+
     it('has static and dynamic dimension values', () => {
         const configValue = new ConfigValue(999, testDimensionValues);
 
@@ -34,18 +33,18 @@ describe('ConfigValue', () => {
     it('can tell if all static dimension values match a certain map', () => {
         const configValue = new ConfigValue(999, testDimensionValues);
         const testMap = new Map<string, any>([
-            ["dim2", "test2"],
-            ["dim3", 4321],
+            ['dim2', 'test2'],
+            ['dim3', 4321],
             // Note: an additional unknown dimension doesn't compromise match
-            ["dim4", 8888] 
+            ['dim4', 8888],
         ]);
 
         expect(configValue.areAllStaticDimensionsMatching(testMap)).to.equal(true);
     });
-  
+
     it('can tell if some static dimension values do not match a certain map', () => {
         const configValue = new ConfigValue(999, testDimensionValues);
-        const testMap = new Map<string, any>([["dim2", "wrong"], ["dim3", 4321]]);
+        const testMap = new Map<string, any>([['dim2', 'wrong'], ['dim3', 4321]]);
 
         expect(configValue.areAllStaticDimensionsMatching(testMap)).to.equal(false);
     });
@@ -53,8 +52,8 @@ describe('ConfigValue', () => {
 
 function buildMockDimensionValue(dimensionId: string, isDynamic: boolean, value: any) {
     return Mock.of <DimensionValue>({
-        dimensionId: dimensionId,
+        dimensionId,
         isDynamicDimension: () => isDynamic,
-        matches: (what: any) => what == value
+        matches: (what: any) => what === value,
     });
 }

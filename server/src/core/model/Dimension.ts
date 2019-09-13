@@ -7,13 +7,13 @@ export enum DimensionType {
 
 export class Dimension {
     private _id: string;
-    private description: string;
+    private _description: string;
     private dynamic: boolean;
     private _type: DimensionType;
 
     constructor(id: string, description: string, dynamic: boolean, type: string) {
         this._id = id;
-        this.description = description;
+        this._description = description;
         this.dynamic = dynamic;
         this._type = (DimensionType as any)[type];
         if (this._type === undefined) {
@@ -23,6 +23,10 @@ export class Dimension {
 
     get id() {
         return this._id;
+    }
+
+    get description() {
+        return this._description;
     }
 
     get type() {
@@ -39,7 +43,7 @@ export class Dimension {
 
         switch (this.type) {
             case DimensionType.percent:
-                if (!isNumber(value) && value >= 0 && value <= 1) {
+                if (!isNumber(value) || value < 0 || value > 1) {
                     throw errorFactory('a number between 0 and 1');
                 }
                 break;
