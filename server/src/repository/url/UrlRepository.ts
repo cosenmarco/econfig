@@ -2,7 +2,7 @@ import jsyaml from 'js-yaml';
 import request from 'request-promise-native';
 import { inspect } from 'util';
 import logger from '../../logger';
-import coreModelFactory from '../coreModelFactory';
+import buildModelFromJson from '../coreModelFactory';
 import Repository from '../Repository';
 import { UrlRepositoryConfig } from './UrlRepositoryConfig';
 
@@ -38,15 +38,11 @@ export class UrlRepository implements Repository {
                     throw new Error('Unknown format to parse CoreModel from URL');
             }
             logger.silly(`Loaded object from URL '${url}' is: ${inspect(json)}`);
-            return this.buildModelFromJson(json);
+            return buildModelFromJson(json);
         });
     }
 
     public shouldReload() {
         return true;
-    }
-
-    private buildModelFromJson(json: object) {
-        return coreModelFactory(json);
     }
 }

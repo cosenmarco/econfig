@@ -1,10 +1,11 @@
-import Dimension from './Dimension'
+import { Dimension } from './Dimension';
 
 export default class DimensionValue {
     private dimension: Dimension;
     private value: any;
 
     constructor(dimension: Dimension, value: any) {
+        dimension.validateValue(value);
         this.dimension = dimension;
         this.value = value;
     }
@@ -13,11 +14,11 @@ export default class DimensionValue {
         return this.dimension.id;
     }
 
-    isDynamicDimension() {
+    public isDynamicDimension() {
         return this.dimension.isDynamic();
     }
 
-    matches(value: any) {
-        return this.value == value;
+    public matches(value: any) {
+        return this.value === value;
     }
 }
