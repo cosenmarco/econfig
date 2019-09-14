@@ -2,19 +2,16 @@ import fs from 'fs';
 import 'reflect-metadata';
 import { inspect } from 'util';
 import { EigenConfig, parseValidEigenConfig } from './core/eigenconfig/EigenConfig';
-import CoreModel from './core/model/CoreModel';
-import logger from './logger';
-import Repository from './repository/Repository';
 import createRepository from './repository/RepositoryFactory';
+import Server from './Server';
+import logger from './util/logger';
 
 /**
  * Startup code. No real unit tests practical here: Will be covered in component tests.
  */
-class Server {
+class ServerController {
     private eigenConfig: EigenConfig;
-    private refreshHandler?: NodeJS.Timeout;
-    private coreModel?: CoreModel;
-    private repository?: Repository;
+    private server?: Server;
 
     constructor(eigenConfig: EigenConfig) {
         this.eigenConfig = eigenConfig;
@@ -23,26 +20,17 @@ class Server {
     public async start() {
         logger.info('Starting server');
 
-        this.repository = await createRepository(this.eigenConfig.configRepositoryType,
+        const repository = await createRepository(this.eigenConfig.configRepositoryType,
             this.eigenConfig.configRepositoryConfig);
 
-        // If we can't load even the first time, better fail fast.
-        await this.triggerConfigReload();
+        const coreModel = await repository.buildCoreModel();
 
-        this.refreshHandler = setInterval(() => this.triggerConfigReload()
-            .catch(error => logger.error(error)), this.eigenConfig.refreshIntervalMillis);
-    }
-
-    public async triggerConfigReload() {
-        if (this.repository && this.repository.shouldReload()) {
-            this.coreModel = await this.repository.buildCoreModel();
-            logger.silly(inspect(this.coreModel, true, 9));
-        }
+        this.server = new Server(this.eigenConfig, repository, coreModel);
     }
 
     public stop() {
-        if (this.refreshHandler) {
-            clearInterval(this.refreshHandler);
+        if (this.server) {
+            this.server.stop();
         }
     }
 }
@@ -51,7 +39,7 @@ class Server {
 parseValidEigenConfig(fs.readFileSync('./eigenconfig.yaml', 'utf-8')).then(async result => {
     logger.info(inspect(result));
 
-    const server = new Server(result);
+    const server = new ServerController(result);
 
     const signalHandler = () => {
         server.stop();

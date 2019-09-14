@@ -1,3 +1,4 @@
+import { Dictionary } from 'lodash';
 import {all, partition} from 'lodash/fp';
 import DimensionValue from './DimensionValue';
 
@@ -34,11 +35,11 @@ export default class ConfigValue implements ResolvedConfigValue {
         return this._value;
     }
 
-    public areAllStaticDimensionsMatching(valuesToMatch: Map<string, any>) {
+    public areAllStaticDimensionsMatching(valuesToMatch: Dictionary<string>) {
         return all((staticDimensionValue: DimensionValue) => {
             const dimensionId = staticDimensionValue.dimensionId;
-            return valuesToMatch.has(dimensionId) &&
-                staticDimensionValue.matches(valuesToMatch.get(dimensionId));
+            return valuesToMatch.hasOwnProperty(dimensionId) &&
+                staticDimensionValue.matches(valuesToMatch[dimensionId]);
         }, this._staticDimensionValues);
     }
 }

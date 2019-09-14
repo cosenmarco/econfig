@@ -1,3 +1,4 @@
+import { Dictionary } from 'lodash';
 import ConfigKey, { ResolvedConfigKey } from './ConfigKey';
 
 export default class Component {
@@ -15,7 +16,7 @@ export default class Component {
         return this._id;
     }
 
-    public resolveUsing(staticDimensionValues: Map<string, any>): ResolvedConfigKey[] {
+    public resolveUsing(staticDimensionValues: Dictionary<string>): ResolvedConfigKey[] {
         return this.configKeys
             .map(configKey => configKey.resolveUsing(staticDimensionValues));
     }

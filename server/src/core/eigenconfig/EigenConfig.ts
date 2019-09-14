@@ -1,4 +1,4 @@
-import { IsIn, validateOrReject } from 'class-validator';
+import { IsIn, IsNumber, Max, validateOrReject } from 'class-validator';
 import jsyaml from 'js-yaml';
 import { isObject } from 'util';
 import logValidationErrors from '../../util/validationErrorsLogger';
@@ -16,6 +16,10 @@ export class EigenConfig {
 
     public refreshIntervalMillis = 0;
 
+    @IsNumber()
+    @Max(65535)
+    public port = 8080;
+
     public constructor(yamlConfig: any) {
         if (isObject(yamlConfig)) {
             this.configRepositoryType = yamlConfig.configRepositoryType;
@@ -25,6 +29,7 @@ export class EigenConfig {
             this.configApiAuthStore = yamlConfig.configApiAuthStore;
             this.configApiAuthStoreConfig = yamlConfig.configApiAuthStoreConfig;
             this.refreshIntervalMillis = yamlConfig.refreshIntervalMillis;
+            this.port = yamlConfig.port;
         }
     }
 }

@@ -4,5 +4,6 @@ configRepositoryConfig:
   url: https://raw.githubusercontent.com/cosenmarco/econfig/master/server/test/yaml/complete_configuration.yaml
   format: yaml
 auditBackend: /dev/null
-configApiAuthStore: none 
+configApiAuthStore: none
 refreshIntervalMillis: 1500
+port: 8080

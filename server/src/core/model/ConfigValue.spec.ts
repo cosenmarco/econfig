@@ -10,9 +10,9 @@ describe('ConfigValue', () => {
     before(() => {
         testDimensionValues  = [
             buildMockDimensionValue('dim0', true, 'test0'),
-            buildMockDimensionValue('dim1', true, 1234),
+            buildMockDimensionValue('dim1', true, '1234'),
             buildMockDimensionValue('dim2', false, 'test2'),
-            buildMockDimensionValue('dim3', false, 4321),
+            buildMockDimensionValue('dim3', false, '4321'),
         ];
     });
 
@@ -32,28 +32,31 @@ describe('ConfigValue', () => {
 
     it('can tell if all static dimension values match a certain map', () => {
         const configValue = new ConfigValue(999, testDimensionValues);
-        const testMap = new Map<string, any>([
-            ['dim2', 'test2'],
-            ['dim3', 4321],
+        const testStaticDimensions = {
+            dim2: 'test2',
+            dim3: '4321',
             // Note: an additional unknown dimension doesn't compromise match
-            ['dim4', 8888],
-        ]);
+            dim4: '8888',
+        };
 
-        expect(configValue.areAllStaticDimensionsMatching(testMap)).to.equal(true);
+        expect(configValue.areAllStaticDimensionsMatching(testStaticDimensions)).to.equal(true);
     });
 
     it('can tell if some static dimension values do not match a certain map', () => {
         const configValue = new ConfigValue(999, testDimensionValues);
-        const testMap = new Map<string, any>([['dim2', 'wrong'], ['dim3', 4321]]);
+        const testMap = {
+            dim2: 'wrong',
+            dim3: '4321',
+        };
 
         expect(configValue.areAllStaticDimensionsMatching(testMap)).to.equal(false);
     });
 });
 
-function buildMockDimensionValue(dimensionId: string, isDynamic: boolean, value: any) {
+function buildMockDimensionValue(dimensionId: string, isDynamic: boolean, value: string) {
     return Mock.of <DimensionValue>({
         dimensionId,
         isDynamicDimension: () => isDynamic,
-        matches: (what: any) => what === value,
+        matches: (what?: string) => what === value,
     });
 }

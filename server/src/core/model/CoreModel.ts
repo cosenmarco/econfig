@@ -1,4 +1,5 @@
 import Component from './Component';
+import { Dictionary } from 'lodash';
 
 export default class CoreModel {
     private components: Map<string, Component>;
@@ -11,10 +12,11 @@ export default class CoreModel {
     /**
      * Returns the configuration keys resolved for a certain component and static dimension values.
      */
-    public resolveConfiguration(componentId: string, staticDimensionValues: Map<string, any>) {
-        if (!this.components.has(componentId)) {
+    public resolveConfiguration(componentId: string, staticDimensionValues: Dictionary<string>) {
+        const component = this.components.get(componentId);
+        if (!component) {
             return undefined;
         }
-        const component = this.components.get(componentId);
+        return component.resolveUsing(staticDimensionValues);
     }
 }

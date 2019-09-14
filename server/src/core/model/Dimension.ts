@@ -39,7 +39,7 @@ export class Dimension {
 
     public validateValue(value: any) {
         const errorFactory = (expected: string) => new Error(
-            `Expected ${expected} for Dimension ${this.id} of type ${this.type}`)
+            `Expected ${expected} for Dimension ${this.id} of type ${this.type}`);
 
         switch (this.type) {
             case DimensionType.percent:
@@ -58,13 +58,13 @@ export class Dimension {
     /**
      * This method helps matching a dimension value in the model (known)
      * against a value incoming from the outside while resolving the configuration.
-     * @param incoming The value coming from outside during a matching operation
      * @param known The known DimensionValue
+     * @param incoming The value coming from outside during a matching operation
      */
-    public matchValue(incoming: any, known: any) {
+    public matchValue(known: any, incoming: string | undefined) {
         switch (this.type) {
             case DimensionType.percent:
-                return isNumber(incoming) && Math.random() <= known;
+                return Math.random() <= known;
             case DimensionType.string:
                 return isString(incoming) && known === incoming;
         }

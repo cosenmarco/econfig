@@ -1,3 +1,4 @@
+import { Dictionary } from 'lodash';
 import ConfigKey from './ConfigKey';
 import ConfigValue from './ConfigValue';
 
@@ -31,13 +32,13 @@ describe('ConfigKey', () => {
         const configKey = new ConfigKey('key', 'test key', testConfigValues);
 
         // Content of this map doesn't matter since we're mocking values
-        const testDimensionValues = new Map<string, any>();
+        const testDimensionValues = {} as Dictionary<string>;
 
         const resolvedKey = configKey.resolveUsing(testDimensionValues);
         expect(resolvedKey.values).to.have.ordered.members([
             testConfigValues[0],
             testConfigValues[2],
-            testConfigValues[4]
+            testConfigValues[4],
         ]);
     });
 
@@ -54,11 +55,11 @@ describe('ConfigKey', () => {
             Mock.of<ConfigValue>({
                 staticDimensionValuesLength: 0,
                 areAllStaticDimensionsMatching: () => false,
-            })
+            }),
         ];
 
         // Content of this map doesn't matter since we're mocking values
-        const testDimensionValues = new Map<string, any>();
+        const testDimensionValues = {} as Dictionary<string>;
 
         const configKey = new ConfigKey('key', 'test key', testConfigValues);
         const resolvedKey = configKey.resolveUsing(testDimensionValues);
@@ -76,11 +77,11 @@ describe('ConfigKey', () => {
             Mock.of<ConfigValue>({
                 staticDimensionValuesLength: 6,
                 areAllStaticDimensionsMatching: () => false,
-            })
+            }),
         ];
 
         // Content of this map doesn't matter since we're mocking values
-        const testDimensionValues = new Map<string, any>();
+        const testDimensionValues = {} as Dictionary<string>;
 
         const configKey = new ConfigKey('key', 'test key', testConfigValues);
         const resolvedKey = configKey.resolveUsing(testDimensionValues);
@@ -91,7 +92,7 @@ describe('ConfigKey', () => {
         const testConfigValues = [] as ConfigValue[];
 
         // Content of this map doesn't matter since we're mocking values
-        const testDimensionValues = new Map<string, any>();
+        const testDimensionValues = {} as Dictionary<string>;
         const configKey = new ConfigKey('key', 'test key', testConfigValues);
 
         const resolvedKey = configKey.resolveUsing(testDimensionValues);

@@ -1,5 +1,6 @@
-import { filter, sortBy } from 'lodash/fp';
-import ConfigValue, { ResolvedConfigValue } from './ConfigValue'
+import { Dictionary } from 'lodash';
+import { filter, flow, map, sortBy } from 'lodash/fp';
+import ConfigValue, { ResolvedConfigValue } from './ConfigValue';
 
 export interface ResolvedConfigKey {
     key: string;
@@ -22,14 +23,20 @@ export default class ConfigKey {
         return this._key;
     }
 
-    public resolveUsing(staticDimensionValues: Map<string, any>): ResolvedConfigKey {
+    public resolveUsing(staticDimensionValues: Dictionary<string>): ResolvedConfigKey {
+        const filteredValues = flow(
+            filter((value: ConfigValue) =>
+                value.staticDimensionValuesLength === 0 ||
+                value.areAllStaticDimensionsMatching(staticDimensionValues)),
+            map((value: ConfigValue) => ({
+                value: value.value,
+                dynamicDimensionValues: value.dynamicDimensionValues,
+            } as ResolvedConfigValue)),
+        )(this.values);
         return {
             key: this.key,
             description: this.description,
-            values: filter(value =>
-                value.staticDimensionValuesLength === 0 ||
-                value.areAllStaticDimensionsMatching(staticDimensionValues),
-            this.values),
+            values: filteredValues,
         };
     }
 }
