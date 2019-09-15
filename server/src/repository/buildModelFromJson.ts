@@ -6,7 +6,7 @@ import ConfigKey from '../core/model/ConfigKey.js';
 import ConfigValue from '../core/model/ConfigValue.js';
 import CoreModel from '../core/model/CoreModel.js';
 import { Dimension, DimensionType } from '../core/model/Dimension.js';
-import DimensionValue from '../core/model/DimensionValue.js';
+import { DimensionValue } from '../core/model/DimensionValue.js';
 import * as schema from './modelSchema-00.01.json';
 
 const schemaValidator = new ajv();
@@ -26,7 +26,7 @@ export default function buildModelFromJson(json: any) {
         const dimensions = buildDimensions(componentDef.dimensions);
         const keys = buildKeys(componentDef.id as string, componentDef.keys,
             dimensions);
-        return new Component(componentDef.id, componentDef.description, keys);
+        return new Component(componentDef.id, componentDef.description, keys, dimensions);
     });
 
     return new CoreModel(components);

@@ -1,5 +1,5 @@
 import ConfigValue from './ConfigValue';
-import DimensionValue from './DimensionValue';
+import { DimensionValue } from './DimensionValue';
 
 import {expect} from 'chai';
 import { Mock } from 'ts-mockery';
@@ -21,9 +21,18 @@ describe('ConfigValue', () => {
 
         expect(configValue.staticDimensionValuesLength).to.equal(2);
 
-        expect(configValue.dynamicDimensionValues).to.have.property('length').equal(2);
-        expect(configValue.dynamicDimensionValues).to.contain(testDimensionValues[0]);
-        expect(configValue.dynamicDimensionValues).to.contain(testDimensionValues[1]);
+        const resolvedDynamicDimensionValues = configValue.getResolvedDynamicDimensionValues();
+
+        expect(resolvedDynamicDimensionValues).to.have.property('length').equal(2);
+        expect(resolvedDynamicDimensionValues).to.have.deep.ordered.members([
+            {
+                dimensionId: 'dim0',
+                value: 'test0',
+            }, {
+                dimensionId: 'dim1',
+                value: '1234',
+            },
+        ]);
 
         expect(configValue.staticDimensionValues).to.have.property('length').equal(2);
         expect(configValue.staticDimensionValues).to.contain(testDimensionValues[2]);
@@ -58,5 +67,6 @@ function buildMockDimensionValue(dimensionId: string, isDynamic: boolean, value:
         dimensionId,
         isDynamicDimension: () => isDynamic,
         matches: (what?: string) => what === value,
+        value,
     });
 }

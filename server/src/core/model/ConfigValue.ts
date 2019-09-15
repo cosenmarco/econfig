@@ -1,13 +1,13 @@
 import { Dictionary } from 'lodash';
-import {all, partition} from 'lodash/fp';
-import DimensionValue from './DimensionValue';
+import { all, partition } from 'lodash/fp';
+import { DimensionValue, ResolvedDimensionValue } from './DimensionValue';
 
 export interface ResolvedConfigValue {
     value: any;
-    dynamicDimensionValues: DimensionValue[];
+    dynamicDimensionValues: ResolvedDimensionValue[];
 }
 
-export default class ConfigValue implements ResolvedConfigValue {
+export default class ConfigValue {
     private _value: any;
     private _staticDimensionValues: DimensionValue[];
     private _dynamicDimensionValues: DimensionValue[];
@@ -27,8 +27,11 @@ export default class ConfigValue implements ResolvedConfigValue {
         return this._staticDimensionValues;
     }
 
-    get dynamicDimensionValues() {
-        return this._dynamicDimensionValues;
+    public getResolvedDynamicDimensionValues() {
+        return this._dynamicDimensionValues.map(dimensionValue => ({
+            dimensionId: dimensionValue.dimensionId,
+            value: dimensionValue.value,
+        } as ResolvedDimensionValue));
     }
 
     get value() {

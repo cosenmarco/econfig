@@ -25,12 +25,14 @@ export default class ConfigKey {
 
     public resolveUsing(staticDimensionValues: Dictionary<string>): ResolvedConfigKey {
         const filteredValues = flow(
+
             filter((value: ConfigValue) =>
                 value.staticDimensionValuesLength === 0 ||
                 value.areAllStaticDimensionsMatching(staticDimensionValues)),
-            map((value: ConfigValue) => ({
-                value: value.value,
-                dynamicDimensionValues: value.dynamicDimensionValues,
+
+            map((configValue: ConfigValue) => ({
+                value: configValue.value,
+                dynamicDimensionValues: configValue.getResolvedDynamicDimensionValues(),
             } as ResolvedConfigValue)),
         )(this.values);
         return {

@@ -1,8 +1,13 @@
 import { Dimension } from './Dimension';
 
-export default class DimensionValue {
+export interface ResolvedDimensionValue {
+    dimensionId: string;
+    value: any;
+}
+
+export class DimensionValue {
+    public readonly value: any;
     private dimension: Dimension;
-    private value: any;
 
     constructor(dimension: Dimension, value: any) {
         dimension.validateValue(value);

@@ -1,5 +1,5 @@
-import Component from './Component';
 import { Dictionary } from 'lodash';
+import Component from './Component';
 
 export default class CoreModel {
     private components: Map<string, Component>;
@@ -17,6 +17,9 @@ export default class CoreModel {
         if (!component) {
             return undefined;
         }
-        return component.resolveUsing(staticDimensionValues);
+        return {
+            dimensions: component.dimensions,
+            keys: component.resolveUsing(staticDimensionValues),
+        };
     }
 }
