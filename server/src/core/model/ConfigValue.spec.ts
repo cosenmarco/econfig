@@ -39,7 +39,7 @@ describe('ConfigValue', () => {
         expect(configValue.staticDimensionValues).to.contain(testDimensionValues[3]);
     });
 
-    it('can tell if all static dimension values match a certain map', () => {
+    it('can tell if all static dimension values match a certain set of dimension values', () => {
         const configValue = new ConfigValue(999, testDimensionValues);
         const testStaticDimensions = {
             dim2: 'test2',
@@ -51,7 +51,7 @@ describe('ConfigValue', () => {
         expect(configValue.areAllStaticDimensionsMatching(testStaticDimensions)).to.equal(true);
     });
 
-    it('can tell if some static dimension values do not match a certain map', () => {
+    it('can tell if some static dimension values do not match a certain set of dimension values', () => {
         const configValue = new ConfigValue(999, testDimensionValues);
         const testMap = {
             dim2: 'wrong',
