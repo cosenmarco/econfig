@@ -27,7 +27,7 @@ export class FileRepository implements Repository {
         const encoding = this.configuration.encoding;
         return fs.promises.readFile(path, encoding).then(content => {
             if (!isString(content)) {
-                throw new Error('Ouch');
+                throw new Error(`Expected some content while reading file '${path}'`);
             }
             logger.debug(`Loaded content from file '${path}' is:\n${content}`);
             let json = {};
