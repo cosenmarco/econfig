@@ -4,7 +4,7 @@ import { isObject } from 'util';
 import logValidationErrors from '../../util/validationErrorsLogger';
 
 export class EigenConfig {
-    @IsIn(['url'])
+    @IsIn(['url', 'file'])
     public configRepositoryType = '';
     public configRepositoryConfig = {};
 

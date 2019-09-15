@@ -1,7 +1,7 @@
 ---
-configRepositoryType: url
+configRepositoryType: file
 configRepositoryConfig:
-  url: https://raw.githubusercontent.com/cosenmarco/econfig/master/server/test/yaml/complete_configuration.yaml
+  path: 'test/yaml/complete_configuration.yaml'
   format: yaml
 auditBackend: /dev/null
 configApiAuthStore: none

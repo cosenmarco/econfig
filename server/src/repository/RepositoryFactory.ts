@@ -1,5 +1,7 @@
 import { validateOrReject } from 'class-validator';
 import logValidationErrors from '../util/validationErrorsLogger';
+import { FileRepository } from './file/FileRepository';
+import { FileRepositoryConfig } from './file/FileRepositoryConfig';
 import { UrlRepository } from './url/UrlRepository';
 import { UrlRepositoryConfig } from './url/UrlRepositoryConfig';
 
@@ -7,6 +9,8 @@ export default async function createRepository(type: string, config: any) {
     switch (type) {
         case 'url':
             return validateConfigAndBuildRepository(config, UrlRepositoryConfig, UrlRepository);
+        case 'file':
+            return validateConfigAndBuildRepository(config, FileRepositoryConfig, FileRepository);
     }
     throw new Error(`Unknown repository type ${type}`);
 }
