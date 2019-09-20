@@ -9,11 +9,16 @@ import { UrlRepositoryConfig } from './UrlRepositoryConfig';
 /**
  * This Repository loads a serialized model config from a URL and produces
  * a CoreModel accordingly.
+ * 
  * The shouldReload() will try (TODO) to use caching headers to understand if the
  * resource has expired.
+ * 
  * The configuration will have to contain the following properties:
  * - url - A string with the URL to download the model from.
  * - format - either "json" or "yaml" to indicate how to parse the resource
+ *
+ * The traceability metadata has no choice to contain the entire model because
+ * there is no way to trace back to the original versioned content.
  */
 export class UrlRepository implements Repository {
     private configuration: UrlRepositoryConfig;
@@ -38,7 +43,13 @@ export class UrlRepository implements Repository {
                     throw new Error('Unknown format to parse CoreModel from URL');
             }
             logger.silly(`Loaded object from URL '${url}' is: ${inspect(json)}`);
-            return buildModelFromJson(json);
+            return {
+                model: buildModelFromJson(json),
+                meta: {
+                    url,
+                    modelJson: json,
+                },
+            };
         });
     }
 

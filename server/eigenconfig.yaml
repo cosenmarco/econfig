@@ -3,7 +3,11 @@ configRepositoryType: file
 configRepositoryConfig:
   path: 'test/yaml/complete_configuration.yaml'
   format: yaml
-auditBackend: /dev/null
+auditBackend: file
+auditBackendConfig:
+  path: 'econfig-audit.log'
+  format: csv
+  identifier: $hostname
 configApiAuthStore: none
 refreshIntervalMillis: 1500
 port: 8080

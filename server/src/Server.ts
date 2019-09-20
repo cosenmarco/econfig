@@ -1,6 +1,8 @@
 import express from 'express';
 import * as http from 'http';
+import moment from 'moment';
 import { inspect } from 'util';
+import { AuditLog } from './audit/AuditLog';
 import { EigenConfig } from './core/eigenconfig/EigenConfig';
 import CoreModel from './core/model/CoreModel';
 import Repository from './repository/Repository';
@@ -13,9 +15,11 @@ export default class Server {
     private repository: Repository;
     private service: express.Express;
     private serviceHandler: http.Server;
+    private auditLog: AuditLog;
 
-    constructor(eigenConfig: EigenConfig, repository: Repository, coreModel: CoreModel) {
+    constructor(eigenConfig: EigenConfig, auditLog: AuditLog, repository: Repository, coreModel: CoreModel) {
         this.eigenConfig = eigenConfig;
+        this.auditLog = auditLog;
         this.repository = repository;
         this.coreModel = coreModel;
         this.refreshHandler = setInterval(() => this.triggerConfigReload()
@@ -39,12 +43,17 @@ export default class Server {
         const port = this.eigenConfig.port;
         this.serviceHandler = this.service.listen(port, () => {
             logger.info(`Service listening on port ${port}`);
+            this.auditLog.serverReady();
         });
     }
 
     public async triggerConfigReload() {
         if (this.repository && this.repository.shouldReload()) {
-            this.coreModel = await this.repository.buildCoreModel();
+            const startMoment = moment();
+            const { model, meta } = await this.repository.buildCoreModel();
+            this.coreModel = model;
+            this.auditLog.logConfigModelLoaded(`Refresh load triggered at ${startMoment.toISOString()}`,
+                model.hash(), meta);
             logger.silly(inspect(this.coreModel, true, 9));
         }
     }
@@ -53,6 +62,7 @@ export default class Server {
         clearInterval(this.refreshHandler);
         this.serviceHandler.close(() => {
             logger.info('Closed all connections');
+            this.auditLog.serverShutdown();
         });
     }
 }

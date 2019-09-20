@@ -9,11 +9,16 @@ import { FileRepositoryConfig } from './FileRepositoryConfig';
 /**
  * This Repository loads a serialized model config from a file and produces
  * a CoreModel accordingly.
+ *
  * The shouldReload() will try (TODO) to see if the file has been modified
  * by looking at the modified timestamp.
+ *
  * The configuration will have to contain the following properties:
  * - path - A string with the path to the file which contains the model definition.
  * - format - either "json" or "yaml" to indicate how to parse the resource
+ *
+ * The traceability metadata has no choice to contain the entire model because
+ * there is no way to trace back to the original versioned content.
  */
 export class FileRepository implements Repository {
     private configuration: FileRepositoryConfig;
@@ -42,7 +47,13 @@ export class FileRepository implements Repository {
                     throw new Error('Unknown format to parse CoreModel from file');
             }
             logger.silly(`Loaded object from file '${path}' is: ${inspect(json)}`);
-            return buildModelFromJson(json);
+            return {
+                model: buildModelFromJson(json),
+                meta: {
+                    path,
+                    modelJson: json,
+                },
+            };
         });
     }
 

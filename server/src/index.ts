@@ -1,7 +1,10 @@
 import fs from 'fs';
+import moment from 'moment';
 import 'reflect-metadata';
 import { inspect } from 'util';
+import createAuditLog from './audit/AuditLogFactory';
 import { EigenConfig, parseValidEigenConfig } from './core/eigenconfig/EigenConfig';
+import * as pack from './package.json';
 import createRepository from './repository/RepositoryFactory';
 import Server from './Server';
 import logger from './util/logger';
@@ -23,9 +26,18 @@ class ServerController {
         const repository = await createRepository(this.eigenConfig.configRepositoryType,
             this.eigenConfig.configRepositoryConfig);
 
-        const coreModel = await repository.buildCoreModel();
+        const auditLog = await createAuditLog(this.eigenConfig.auditBackend,
+            this.eigenConfig.auditBackendConfig);
 
-        this.server = new Server(this.eigenConfig, repository, coreModel);
+        auditLog.serverStarted(pack.version, this.eigenConfig);
+
+        const startMoment = moment();
+        const { model, meta } = await repository.buildCoreModel();
+
+        auditLog.logConfigModelLoaded(`Initial load triggered at ${startMoment.toISOString()}`,
+            model.hash(), meta);
+
+        this.server = new Server(this.eigenConfig, auditLog, repository, model);
     }
 
     public stop() {

@@ -8,6 +8,7 @@ export class EigenConfig {
     public configRepositoryType = '';
     public configRepositoryConfig = {};
 
+    @IsIn(['file'])
     public auditBackend = '';
     public auditBackendConfig = {};
 

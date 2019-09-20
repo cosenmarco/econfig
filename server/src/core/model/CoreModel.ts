@@ -1,4 +1,5 @@
 import { Dictionary } from 'lodash';
+import hash from 'object-hash';
 import Component from './Component';
 
 export default class CoreModel {
@@ -21,5 +22,9 @@ export default class CoreModel {
             dimensions: component.dimensions,
             keys: component.resolveUsing(staticDimensionValues),
         };
+    }
+
+    public hash() {
+        return hash(this);
     }
 }
