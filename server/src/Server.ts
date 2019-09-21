@@ -48,7 +48,7 @@ export default class Server {
     }
 
     public async triggerConfigReload() {
-        if (this.repository && this.repository.shouldReload()) {
+        if (this.repository && await this.repository.shouldReload()) {
             const startMoment = moment();
             const { model, meta } = await this.repository.buildCoreModel();
             this.coreModel = model;

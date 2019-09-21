@@ -1,6 +1,9 @@
 # All the distribution directories
 dist
 
+econfig-combined.log
+econfig-audit.log
+
 # Logs
 logs
 *.log

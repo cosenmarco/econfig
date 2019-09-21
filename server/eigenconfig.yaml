@@ -1,8 +1,12 @@
 ---
-configRepositoryType: file
+#configRepositoryType: file
+#configRepositoryConfig:
+#  path: 'test/yaml/complete_configuration.yaml'
+#  format: yaml
+configRepositoryType: url
 configRepositoryConfig:
-  path: 'test/yaml/complete_configuration.yaml'
-  format: yaml
+ url: 'https://raw.githubusercontent.com/cosenmarco/econfig/master/server/test/yaml/complete_configuration.yaml'
+ format: yaml
 auditBackend: file
 auditBackendConfig:
   path: 'econfig-audit.log'

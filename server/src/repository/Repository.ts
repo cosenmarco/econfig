@@ -9,7 +9,7 @@ import CoreModel from '../core/model/CoreModel';
 export default interface Repository {
     /**
      * This method builds the CoreModel starting from a representation of the model
-     * in this Repository. It also provides the metadata required by audit log for 
+     * in this Repository. It also provides the metadata required by audit log for
      * traceability purposes
      */
     buildCoreModel(): Promise<{ model: CoreModel, meta: object}>;
@@ -17,5 +17,5 @@ export default interface Repository {
     /**
      * This methods tells if the model should be re-built since the last time it was built.
      */
-    shouldReload(): boolean;
+    shouldReload(): Promise<boolean>;
 }
