@@ -13,18 +13,18 @@ export class Tenant {
 
     public tenantConfig: TenantConfig;
 
-    public constructor(yamlConfig: any) {
+    public constructor(yamlConfig: any, index: number) {
         if (!isObject(yamlConfig)) {
-            throw new Error('Expected config to be an object');
+            throw new Error(`Expected tenant[${index}]  to be an object`);
         }
 
         if (!isString(yamlConfig.id)) {
-            throw new Error('The tenant id must be a string');
+            throw new Error(`Expected tenant[${index}].id must be a string`);
         }
         this.id = yamlConfig.id as string;
 
         if (!isString(yamlConfig.type)) {
-            throw new Error('The tenant type must be a string for tenant ' + this.id);
+            throw new Error(`Expected tenant[${index}].type must be a string (tenant ${this.id})`);
         }
         this.type = yamlConfig.type as string;
 
@@ -33,8 +33,7 @@ export class Tenant {
                 this.tenantConfig = new TenantConfig(yamlConfig.config, this.id);
                 break;
             default:
-                throw new Error('The tenant type ' + this.type +
-                    ' is not supported for tenant ' + this.id);
+                throw new Error(`The tenant[${index}].type ${this.type} is not supported for tenant ${this.id}`);
         }
     }
 }

@@ -1,21 +1,53 @@
 ---
-port: 8080
-tenants:
-  - id: tenant0
-    type: inline
-    config:
-      #configRepositoryType: file
-      #configRepositoryConfig:
-      #  path: 'test/yaml/complete_configuration.yaml'
-      #  format: yaml
-      configRepositoryType: url
-      configRepositoryConfig:
-        url: 'https://raw.githubusercontent.com/cosenmarco/econfig/master/server/test/yaml/complete_configuration.yaml'
-        format: yaml
-      auditBackend: file
-      auditBackendConfig:
-        path: 'econfig-audit.log'
-        format: csv
-        identifier: $hostname
-      configApiAuthStore: none
-      refreshIntervalMillis: 1500
+    # The version for interpreting this configuration file
+    version: 1
+
+    # The port the server will listen at
+    port: 8080
+
+    # Set xPoweredByHeaderInResponses to true if you want to set
+    # the X-Powered-By header in the responses
+    xPoweredByHeaderInResponses: false
+
+    # The list of tenants. Each tenant has an independent configuration.
+    tenants:
+
+        -
+            # A unique identifier for the tenant. Max 150 char
+            id: tenant0
+
+            # For now only 'inline' is supported
+            type: inline
+
+            # The tenant configuration. In this case it's shown the inlined configuration
+            config:
+
+                # The refresh interval for reloading the configuration from the repository
+                refreshIntervalMillis: 1500
+
+                # The configuration repository type. Supported are for now 'url' and 'file'
+                configRepositoryType: url
+
+                # The 'url' repository configuration needs the url and the file format
+                configRepositoryConfig:
+                    url: 'https://raw.githubusercontent.com/cosenmarco/econfig/master/server/test/yaml/complete_configuration.yaml'
+                    format: yaml
+
+                    # Example of file repository configuration
+                    #configRepositoryType: file
+                    #configRepositoryConfig:
+                        #  path: 'test/yaml/complete_configuration.yaml'
+                        #  format: yaml
+
+                # The type of audit backend
+                auditBackend: file
+
+                # The config for the audit backend
+                auditBackendConfig:
+                    path: 'econfig-audit.log'
+                    format: csv
+                    identifier: $hostname
+
+                # The authentication store for the config API
+                configApiAuthStore: none
+

@@ -1,11 +1,11 @@
 import { Dictionary } from 'lodash';
 import moment from 'moment';
 import { inspect } from 'util';
-import { AuditLog } from '../audit/AuditLog';
-import { TenantConfig } from '../core/eigenconfig/TenantConfig';
-import CoreModel from '../core/model/CoreModel';
-import Repository from '../repository/Repository';
-import logger from '../util/logger';
+import { AuditLog } from '../../audit/AuditLog';
+import Repository from '../../repository/Repository';
+import logger from '../../util/logger';
+import { TenantConfig } from '../eigenconfig/TenantConfig';
+import CoreModel from './CoreModel';
 
 export interface TenantInfo {
     readonly model: CoreModel;

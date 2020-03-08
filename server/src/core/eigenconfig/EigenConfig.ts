@@ -1,7 +1,6 @@
 import { IsNumber, Max, validateOrReject } from 'class-validator';
 import jsyaml from 'js-yaml';
-import { map } from 'lodash/fp';
-import { isArray } from 'util';
+import { map } from 'lodash';
 import logValidationErrors from '../../util/validationErrorsLogger';
 import { Tenant } from './Tenant';
 
@@ -10,15 +9,25 @@ export class EigenConfig {
     @Max(65535)
     public port = 8080;
 
+    public xPoweredByHeaderInResponses: boolean;
+
     public tenants: Tenant[];
 
     public constructor(yamlConfig: any) {
-        this.port = yamlConfig.port;
-
-        if (!isArray(yamlConfig.tenants)) {
-            throw new Error ('Expected "tenants" to be an array');
+        if (yamlConfig.version !== 1) {
+            throw new Error(`Unsupported eigenconfig version: ${yamlConfig.version}`);
         }
-        this.tenants = map((tenantYaml: any) => new Tenant(tenantYaml))(yamlConfig.tenants);
+
+        this.port = yamlConfig.port;
+        this.xPoweredByHeaderInResponses = yamlConfig.xPoweredByHeaderInResponses === true;
+
+        const tenants = yamlConfig.tenants;
+        if (!Array.isArray(tenants)) {
+            throw new Error ('Expected "tenants" to be an array');
+        } else {
+            // using non-fp version of map because I want index (see capping for lodash fp)
+            this.tenants = map(tenants, (tenantYaml, index) => new Tenant(tenantYaml, index));
+        }
     }
 }
 

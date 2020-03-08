@@ -5,10 +5,10 @@ import { inspect } from 'util';
 import createAuditLog from './audit/AuditLogFactory';
 import { EigenConfig, parseValidEigenConfig } from './core/eigenconfig/EigenConfig';
 import { TenantConfig } from './core/eigenconfig/TenantConfig';
+import { TenantInfo } from './core/model/TenantModel';
+import { Server } from './core/server/Server';
 import * as pack from './package.json';
 import createRepository from './repository/RepositoryFactory';
-import { Server } from './server/Server';
-import { TenantInfo } from './server/TenantModel';
 import logger from './util/logger';
 import perform from './util/perform';
 

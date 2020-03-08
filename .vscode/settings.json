@@ -6,8 +6,10 @@
     "mocha.nycPath": "node_modules/.bin/nyc",
     "tslint.packageManager": "yarn",
     "cSpell.words": [
+        "econfig",
         "eigen",
         "eigenconfig",
+        "error",
         "jsyaml"
     ],
     "javascript.preferences.quoteStyle": "single",

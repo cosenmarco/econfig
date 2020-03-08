@@ -1,9 +1,15 @@
 import express from 'express';
 import * as http from 'http';
 import { flow, keyBy, map } from 'lodash/fp';
-import { EigenConfig } from '../core/eigenconfig/EigenConfig';
-import logger from '../util/logger';
-import { TenantInfo, TenantModel } from './TenantModel';
+import logger from '../../util/logger';
+import { EigenConfig } from '../eigenconfig/EigenConfig';
+import { InvalidTenantIdError } from '../errors/InvalidTenantIdError';
+import { UnknownTenantError } from '../errors/UnknownTenantError';
+import { TenantInfo, TenantModel } from '../model/TenantModel';
+import errorHandlingMiddleware from './errorHandlingMiddleware';
+import { InvalidComponentIdError } from '../errors/InvalidComponentIdError';
+
+const MAX_ID_LEN = 150;
 
 export class Server {
     private eigenConfig: EigenConfig;
@@ -19,22 +25,28 @@ export class Server {
         )(tenantInfos);
         this.service = express();
 
+        this.service.set('etag', false);
+        this.service.set('x-powered-by', eigenConfig.xPoweredByHeaderInResponses);
+
         this.service.get('/config/:tenant/:component', (req, res) => {
-            const component = req.params.component;
+            const componentId = req.params.component;
             const tenantId = req.params.tenant;
+
+            if (tenantId.length > MAX_ID_LEN) {
+                throw new InvalidTenantIdError(tenantId.substring(0, MAX_ID_LEN) + '...');
+            }
+
+            if (componentId.length > MAX_ID_LEN) {
+                throw new InvalidComponentIdError(componentId.substring(0, MAX_ID_LEN) + '...');
+            }
+
             const tenant = this.tenants[tenantId];
             if (!tenant) {
-                res.status(404).json({
-                    error: 'Cannot find tenant',
-                }); // TODO standardize errors
-                return;
+                throw new UnknownTenantError(tenantId);
             }
-            const configuration = tenant.resolveConfiguration(component, req.query);
-            if (configuration) {
-                res.send(configuration);
-            } else {
-                res.status(404).end();
-            }
+
+            const configuration = tenant.resolveConfiguration(componentId, req.query);
+            res.send(configuration);
         });
 
         this.service.get('/health', (req, res) => {
@@ -42,6 +54,8 @@ export class Server {
                 tenants: Object.keys(this.tenants),
             });
         });
+
+        this.service.use(errorHandlingMiddleware);
 
         const port = this.eigenConfig.port;
         this.serviceHandler = this.service.listen(port, () => {

@@ -1,5 +1,6 @@
 import { Dictionary } from 'lodash';
 import hash from 'object-hash';
+import { UnknownComponentError } from '../errors/UnknownComponentError';
 import Component from './Component';
 
 export default class CoreModel {
@@ -16,7 +17,7 @@ export default class CoreModel {
     public resolveConfiguration(componentId: string, staticDimensionValues: Dictionary<string>) {
         const component = this.components.get(componentId);
         if (!component) {
-            return undefined;
+            throw new UnknownComponentError(componentId);
         }
         return {
             dimensions: component.dimensions,
