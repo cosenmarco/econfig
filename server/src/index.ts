@@ -7,8 +7,8 @@ import { EigenConfig, parseValidEigenConfig } from './core/eigenconfig/EigenConf
 import { TenantConfig } from './core/eigenconfig/TenantConfig';
 import * as pack from './package.json';
 import createRepository from './repository/RepositoryFactory';
-import { Server } from './Server';
-import { TenantInfo } from './TenantModel';
+import { Server } from './server/Server';
+import { TenantInfo } from './server/TenantModel';
 import logger from './util/logger';
 import perform from './util/perform';
 

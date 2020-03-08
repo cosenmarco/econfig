@@ -1,9 +1,9 @@
 import express from 'express';
 import * as http from 'http';
 import { flow, keyBy, map } from 'lodash/fp';
-import { EigenConfig } from './core/eigenconfig/EigenConfig';
+import { EigenConfig } from '../core/eigenconfig/EigenConfig';
+import logger from '../util/logger';
 import { TenantInfo, TenantModel } from './TenantModel';
-import logger from './util/logger';
 
 export class Server {
     private eigenConfig: EigenConfig;
@@ -24,7 +24,7 @@ export class Server {
             const tenantId = req.params.tenant;
             const tenant = this.tenants[tenantId];
             if (!tenant) {
-                res.status(404).send({
+                res.status(404).json({
                     error: 'Cannot find tenant',
                 }); // TODO standardize errors
                 return;
