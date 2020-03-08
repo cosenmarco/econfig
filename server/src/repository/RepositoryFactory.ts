@@ -2,10 +2,11 @@ import { validateOrReject } from 'class-validator';
 import logValidationErrors from '../util/validationErrorsLogger';
 import { FileRepository } from './file/FileRepository';
 import { FileRepositoryConfig } from './file/FileRepositoryConfig';
+import Repository from './Repository';
 import { UrlRepository } from './url/UrlRepository';
 import { UrlRepositoryConfig } from './url/UrlRepositoryConfig';
 
-export default async function createRepository(type: string, config: any) {
+export default async function createRepository(type: string, config: any): Promise<Repository> {
     switch (type) {
         case 'url':
             return validateConfigAndBuildRepository(config, UrlRepositoryConfig, UrlRepository);

@@ -1,4 +1,4 @@
-import { EigenConfig } from '../core/eigenconfig/EigenConfig';
+import { TenantConfig } from '../core/eigenconfig/TenantConfig';
 
 /**
  * The AuditLog offers a facility to record events permanently about
@@ -13,9 +13,9 @@ export interface AuditLog {
      * successfully parsed.
      * @param comment the comment for the event
      * @param version the version of the server
-     * @param eigenconfig the current configuration
+     * @param tenantConfig the current configuration
      */
-    serverStarted(version: string, eigenconfig: EigenConfig): void;
+    serverStarted(version: string, tenantConfig: TenantConfig): void;
 
     /**
      * This is called when the server has loaded the initial model and it's ready to

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import moment from 'moment';
 import os from 'os';
-import { EigenConfig } from '../../core/eigenconfig/EigenConfig';
+import { TenantConfig } from '../../core/eigenconfig/TenantConfig';
 import { AuditLog } from '../AuditLog';
 import { FileBasedAuditLogConfig } from './FileBasedAuditLogConfig';
 
@@ -36,13 +36,13 @@ export default class FileBasedAuditLog implements AuditLog {
         this.fileDescriptor = fs.openSync(configuration.path, 'a', 0o660);
     }
 
-    public serverStarted(version: string, eigenconfig: EigenConfig) {
+    public serverStarted(version: string, tenantConfig: TenantConfig) {
         this.logEvent({
             eventType: 'server_started',
             comment: 'Started',
             payload: {
                 version,
-                eigenconfig,
+                tenantConfig,
             },
         });
     }

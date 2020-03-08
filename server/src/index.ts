@@ -4,10 +4,13 @@ import 'reflect-metadata';
 import { inspect } from 'util';
 import createAuditLog from './audit/AuditLogFactory';
 import { EigenConfig, parseValidEigenConfig } from './core/eigenconfig/EigenConfig';
+import { TenantConfig } from './core/eigenconfig/TenantConfig';
 import * as pack from './package.json';
 import createRepository from './repository/RepositoryFactory';
-import Server from './Server';
+import { Server } from './Server';
+import { TenantInfo } from './TenantModel';
 import logger from './util/logger';
+import perform from './util/perform';
 
 /**
  * Startup code. No real unit tests practical here: Will be covered in component tests.
@@ -23,13 +26,32 @@ class ServerController {
     public async start() {
         logger.info('Starting server');
 
-        const repository = await createRepository(this.eigenConfig.configRepositoryType,
-            this.eigenConfig.configRepositoryConfig);
+        const bootstrapResults = await perform(this.eigenConfig.tenants,
+            tenant => this.bootstrapTenant(tenant.tenantConfig)
+                .catch(error => Promise.reject(
+                    `Cannot bootstrap tenant ${tenant.tenantConfig.id}: ${error}`)));
 
-        const auditLog = await createAuditLog(this.eigenConfig.auditBackend,
-            this.eigenConfig.auditBackendConfig);
+        bootstrapResults[1].forEach(result => logger.error(result.reason));
 
-        auditLog.serverStarted(pack.version, this.eigenConfig);
+        const tenantInfos = bootstrapResults[0].map(result => result.value);
+        this.server = new Server(this.eigenConfig, tenantInfos);
+    }
+
+    public stop() {
+        if (this.server) {
+            this.server.stop();
+        }
+    }
+
+    private async bootstrapTenant(tenantConfig: TenantConfig): Promise<TenantInfo> {
+        const repository = await createRepository(
+            tenantConfig.configRepositoryType,
+            tenantConfig.configRepositoryConfig);
+
+        const auditLog = await createAuditLog(tenantConfig.auditBackend,
+            tenantConfig.auditBackendConfig);
+
+        auditLog.serverStarted(pack.version, tenantConfig);
 
         const startMoment = moment();
         const { model, meta } = await repository.buildCoreModel();
@@ -37,13 +59,12 @@ class ServerController {
         auditLog.logConfigModelLoaded(`Initial load triggered at ${startMoment.toISOString()}`,
             model.hash(), meta);
 
-        this.server = new Server(this.eigenConfig, auditLog, repository, model);
-    }
-
-    public stop() {
-        if (this.server) {
-            this.server.stop();
-        }
+        return {
+            model,
+            repository,
+            auditLog,
+            tenantConfig,
+        } as TenantInfo;
     }
 }
 

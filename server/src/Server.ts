@@ -1,34 +1,35 @@
 import express from 'express';
 import * as http from 'http';
-import moment from 'moment';
-import { inspect } from 'util';
-import { AuditLog } from './audit/AuditLog';
+import { flow, keyBy, map } from 'lodash/fp';
 import { EigenConfig } from './core/eigenconfig/EigenConfig';
-import CoreModel from './core/model/CoreModel';
-import Repository from './repository/Repository';
+import { TenantInfo, TenantModel } from './TenantModel';
 import logger from './util/logger';
 
-export default class Server {
+export class Server {
     private eigenConfig: EigenConfig;
-    private refreshHandler: NodeJS.Timeout;
-    private coreModel: CoreModel;
-    private repository: Repository;
     private service: express.Express;
     private serviceHandler: http.Server;
-    private auditLog: AuditLog;
+    private tenants: { [id: string ]: TenantModel};
 
-    constructor(eigenConfig: EigenConfig, auditLog: AuditLog, repository: Repository, coreModel: CoreModel) {
+    constructor(eigenConfig: EigenConfig, tenantInfos: TenantInfo[]) {
         this.eigenConfig = eigenConfig;
-        this.auditLog = auditLog;
-        this.repository = repository;
-        this.coreModel = coreModel;
-        this.refreshHandler = setInterval(() => this.triggerConfigReload()
-            .catch(error => logger.error(error)), this.eigenConfig.refreshIntervalMillis);
+        this.tenants = flow(
+            map((info: TenantInfo) => new TenantModel(info)),
+            keyBy(model => model.id),
+        )(tenantInfos);
         this.service = express();
 
-        this.service.get('/config/:component', (req, res) => {
+        this.service.get('/config/:tenant/:component', (req, res) => {
             const component = req.params.component;
-            const configuration = this.coreModel.resolveConfiguration(component, req.query);
+            const tenantId = req.params.tenant;
+            const tenant = this.tenants[tenantId];
+            if (!tenant) {
+                res.status(404).send({
+                    error: 'Cannot find tenant',
+                }); // TODO standardize errors
+                return;
+            }
+            const configuration = tenant.resolveConfiguration(component, req.query);
             if (configuration) {
                 res.send(configuration);
             } else {
@@ -37,32 +38,23 @@ export default class Server {
         });
 
         this.service.get('/health', (req, res) => {
-            res.status(204);
+            res.status(200).send({
+                tenants: Object.keys(this.tenants),
+            });
         });
 
         const port = this.eigenConfig.port;
         this.serviceHandler = this.service.listen(port, () => {
             logger.info(`Service listening on port ${port}`);
-            this.auditLog.serverReady();
+            Object.values(this.tenants).forEach(tenant => tenant.serverReady());
         });
     }
 
-    public async triggerConfigReload() {
-        if (this.repository && await this.repository.shouldReload()) {
-            const startMoment = moment();
-            const { model, meta } = await this.repository.buildCoreModel();
-            this.coreModel = model;
-            this.auditLog.logConfigModelLoaded(`Refresh load triggered at ${startMoment.toISOString()}`,
-                model.hash(), meta);
-            logger.silly(inspect(this.coreModel, true, 9));
-        }
-    }
-
     public stop() {
-        clearInterval(this.refreshHandler);
+        Object.values(this.tenants).forEach(tenant => tenant.initiateShutdown());
         this.serviceHandler.close(() => {
             logger.info('Closed all connections');
-            this.auditLog.serverShutdown();
+            Object.values(this.tenants).forEach(tenant => tenant.serverShutdown());
         });
     }
 }

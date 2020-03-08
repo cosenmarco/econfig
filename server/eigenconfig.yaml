@@ -1,17 +1,21 @@
 ---
-#configRepositoryType: file
-#configRepositoryConfig:
-#  path: 'test/yaml/complete_configuration.yaml'
-#  format: yaml
-configRepositoryType: url
-configRepositoryConfig:
- url: 'https://raw.githubusercontent.com/cosenmarco/econfig/master/server/test/yaml/complete_configuration.yaml'
- format: yaml
-auditBackend: file
-auditBackendConfig:
-  path: 'econfig-audit.log'
-  format: csv
-  identifier: $hostname
-configApiAuthStore: none
-refreshIntervalMillis: 1500
 port: 8080
+tenants:
+  - id: tenant0
+    type: inline
+    config:
+      #configRepositoryType: file
+      #configRepositoryConfig:
+      #  path: 'test/yaml/complete_configuration.yaml'
+      #  format: yaml
+      configRepositoryType: url
+      configRepositoryConfig:
+        url: 'https://raw.githubusercontent.com/cosenmarco/econfig/master/server/test/yaml/complete_configuration.yaml'
+        format: yaml
+      auditBackend: file
+      auditBackendConfig:
+        path: 'econfig-audit.log'
+        format: csv
+        identifier: $hostname
+      configApiAuthStore: none
+      refreshIntervalMillis: 1500
