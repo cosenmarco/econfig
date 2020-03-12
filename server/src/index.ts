@@ -5,7 +5,7 @@ import { inspect } from 'util';
 import createAuditLog from './audit/AuditLogFactory';
 import { EigenConfig, parseValidEigenConfig } from './core/eigenconfig/EigenConfig';
 import { TenantConfig } from './core/eigenconfig/TenantConfig';
-import { TenantInfo } from './core/model/TenantModel';
+import { TenantInfo, TenantModel } from './core/model/TenantModel';
 import { Server } from './core/server/Server';
 import * as pack from './package.json';
 import createRepository from './repository/RepositoryFactory';
@@ -34,7 +34,7 @@ class ServerController {
         bootstrapResults[1].forEach(result => logger.error(result.reason));
 
         const tenantInfos = bootstrapResults[0].map(result => result.value);
-        this.server = new Server(this.eigenConfig, tenantInfos);
+        this.server = new Server(this.eigenConfig, tenantInfos.map(info => new TenantModel(info)));
     }
 
     public stop() {

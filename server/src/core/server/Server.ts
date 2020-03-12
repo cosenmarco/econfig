@@ -1,13 +1,13 @@
 import express from 'express';
 import * as http from 'http';
-import { flow, keyBy, map } from 'lodash/fp';
+import { keyBy } from 'lodash/fp';
 import logger from '../../util/logger';
 import { EigenConfig } from '../eigenconfig/EigenConfig';
+import { InvalidComponentIdError } from '../errors/InvalidComponentIdError';
 import { InvalidTenantIdError } from '../errors/InvalidTenantIdError';
 import { UnknownTenantError } from '../errors/UnknownTenantError';
-import { TenantInfo, TenantModel } from '../model/TenantModel';
+import { TenantModel } from '../model/TenantModel';
 import errorHandlingMiddleware from './errorHandlingMiddleware';
-import { InvalidComponentIdError } from '../errors/InvalidComponentIdError';
 
 const MAX_ID_LEN = 150;
 
@@ -17,12 +17,9 @@ export class Server {
     private serviceHandler: http.Server;
     private tenants: { [id: string ]: TenantModel};
 
-    constructor(eigenConfig: EigenConfig, tenantInfos: TenantInfo[]) {
+    constructor(eigenConfig: EigenConfig, tenantModels: TenantModel[]) {
         this.eigenConfig = eigenConfig;
-        this.tenants = flow(
-            map((info: TenantInfo) => new TenantModel(info)),
-            keyBy(model => model.id),
-        )(tenantInfos);
+        this.tenants = keyBy((model: TenantModel) => model.id)(tenantModels);
         this.service = express();
 
         this.service.set('etag', false);
