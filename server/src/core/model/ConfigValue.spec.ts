@@ -1,7 +1,7 @@
-import ConfigValue from './ConfigValue';
+import { ConfigValue } from './ConfigValue';
 import { DimensionValue } from './DimensionValue';
 
-import {expect} from 'chai';
+import { expect } from 'chai';
 import { Mock } from 'ts-mockery';
 
 describe('ConfigValue', () => {

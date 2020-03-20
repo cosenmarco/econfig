@@ -1,9 +1,9 @@
 import jsyaml from 'js-yaml';
 import request from 'request-promise-native';
 import { inspect } from 'util';
-import logger from '../../util/logger';
-import buildModelFromJson from '../buildModelFromJson';
-import Repository from '../Repository';
+import { logger } from '../../util/logger';
+import { buildModelFromJson } from '../buildModelFromJson';
+import { Repository } from '../Repository';
 import { UrlRepositoryConfig } from './UrlRepositoryConfig';
 
 /**

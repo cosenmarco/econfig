@@ -25,7 +25,7 @@ interface Event {
  * The id represents an identifier for this server instance (in case it is part of
  * a cluster). The special id $hostname is replaced by the host name.
  */
-export default class FileBasedAuditLog implements AuditLog {
+export class FileBasedAuditLog implements AuditLog {
     private configuration: FileBasedAuditLogConfig;
     private id: string;
     private fileDescriptor: number;

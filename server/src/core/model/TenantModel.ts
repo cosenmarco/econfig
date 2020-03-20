@@ -2,10 +2,10 @@ import { Dictionary } from 'lodash';
 import moment from 'moment';
 import { inspect } from 'util';
 import { AuditLog } from '../../audit/AuditLog';
-import Repository from '../../repository/Repository';
-import logger from '../../util/logger';
+import { Repository } from '../../repository/Repository';
+import { logger } from '../../util/logger';
 import { TenantConfig } from '../eigenconfig/TenantConfig';
-import CoreModel from './CoreModel';
+import { CoreModel } from './CoreModel';
 
 export interface TenantInfo {
     readonly model: CoreModel;
@@ -27,7 +27,8 @@ export class TenantModel {
         this.repository = info.repository;
         this.auditLog = info.auditLog;
         this.refreshHandler = setInterval(
-            () => this.triggerConfigReload().catch(error => logger.error(error)),
+            () => this.triggerConfigReload().catch(
+                error => logger.error(`Unable to reload the configuration for tenant ${this._id}: ${error}`)),
             info.tenantConfig.refreshIntervalMillis);
     }
 

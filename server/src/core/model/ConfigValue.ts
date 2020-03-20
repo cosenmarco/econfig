@@ -7,7 +7,7 @@ export interface ResolvedConfigValue {
     dynamicDimensionValues: ResolvedDimensionValue[];
 }
 
-export default class ConfigValue {
+export class ConfigValue {
     private _value: any;
     private _staticDimensionValues: DimensionValue[];
     private _dynamicDimensionValues: DimensionValue[];

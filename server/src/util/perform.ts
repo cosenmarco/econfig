@@ -8,7 +8,7 @@ import { partition } from 'lodash/fp';
  * @param mapper a function which maps an element to a promise which is the task
  *              to execute on the element
  */
-export default async function perform<T, R>(data: T[], mapper: (d: T) => Promise<R>) {
+export async function perform<T, R>(data: T[], mapper: (d: T) => Promise<R>) {
     const results = await Promise.allSettled(data.map(mapper));
     return partition(isFulfilled)(results);
 }

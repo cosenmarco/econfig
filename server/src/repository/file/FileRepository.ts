@@ -1,9 +1,10 @@
 import fs from 'fs';
 import jsyaml from 'js-yaml';
+import { isAbsolute, join } from 'path';
 import { inspect, isString } from 'util';
-import logger from '../../util/logger';
-import buildModelFromJson from '../buildModelFromJson';
-import Repository from '../Repository';
+import { logger } from '../../util/logger';
+import { buildModelFromJson } from '../buildModelFromJson';
+import { Repository } from '../Repository';
 import { FileRepositoryConfig } from './FileRepositoryConfig';
 
 /**
@@ -22,26 +23,32 @@ import { FileRepositoryConfig } from './FileRepositoryConfig';
  */
 export class FileRepository implements Repository {
     private configuration: FileRepositoryConfig;
+    private eigenConfigDir: string;
+    private configFilePath: string;
     private mtimeMs = 0;
 
-    public constructor(configuration: FileRepositoryConfig) {
+    public constructor(configuration: FileRepositoryConfig, eigenConfigDir: string) {
         this.configuration = configuration;
+        this.eigenConfigDir = eigenConfigDir;
+
+        const configPath = this.configuration.path;
+        this.configFilePath = isAbsolute(configPath) ? configPath :
+            join(process.cwd(), this.eigenConfigDir, configPath);
     }
 
     public async buildCoreModel() {
-        const path = this.configuration.path;
         const encoding = this.configuration.encoding;
 
         // Gather the modified timestamp for later comparison in shouldReload()
-        const stat = await fs.promises.stat(path);
+        const stat = await fs.promises.stat(this.configFilePath);
         this.mtimeMs = stat.mtimeMs;
+        const content = await fs.promises.readFile(this.configFilePath, encoding);
 
-        const content = await fs.promises.readFile(path, encoding);
         if (!isString(content)) {
-            throw new Error(`Expected some content while reading file '${path}'`);
+            throw new Error(`Expected some content while reading file '${this.configFilePath}'`);
         }
 
-        logger.debug(`Loaded content from file '${path}' is:\n${content}`);
+        logger.debug(`Loaded content from file '${this.configFilePath}' is:\n${content}`);
 
         let json = {};
         const format = this.configuration.format;
@@ -56,18 +63,18 @@ export class FileRepository implements Repository {
                 throw new Error(`Unknown format to parse CoreModel from file: ${format}`);
         }
 
-        logger.silly(`Loaded object from file '${path}' is: ${inspect(json)}`);
+        logger.silly(`Loaded object from file '${this.configFilePath}' is: ${inspect(json)}`);
         return {
             model: buildModelFromJson(json),
             meta: {
-                path,
+                path: this.configFilePath,
                 modelJson: json,
             },
         };
     }
 
     public async shouldReload() {
-        const { mtimeMs } = await fs.promises.stat(this.configuration.path);
+        const { mtimeMs } = await fs.promises.stat(this.configFilePath);
         return mtimeMs > this.mtimeMs;
     }
 }

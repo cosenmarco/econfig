@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { EconfigError } from '../errors/EconfigError';
 
-export default function errorMiddleware(
+export function errorMiddleware(
     error: Error,
     request: Request,
     response: Response,

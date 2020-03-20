@@ -8,8 +8,9 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceFolder}/server/src/index.ts",
+            "program": "${workspaceFolder}/server/src/econfig-server.ts",
             "cwd": "${workspaceFolder}/server",
+            "args": ["-f", "example/eigenconfig.yaml"],
             "outFiles": [
                 "${workspaceFolder}/server/dist/**/*.js"
             ]

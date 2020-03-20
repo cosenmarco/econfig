@@ -1,21 +1,19 @@
-import fs from 'fs';
 import moment from 'moment';
 import 'reflect-metadata';
-import { inspect } from 'util';
-import createAuditLog from './audit/AuditLogFactory';
-import { EigenConfig, parseValidEigenConfig } from './core/eigenconfig/EigenConfig';
+import { createAuditLog } from './audit/AuditLogFactory';
+import { EigenConfig } from './core/eigenconfig/EigenConfig';
 import { TenantConfig } from './core/eigenconfig/TenantConfig';
 import { TenantInfo, TenantModel } from './core/model/TenantModel';
 import { Server } from './core/server/Server';
 import * as pack from './package.json';
-import createRepository from './repository/RepositoryFactory';
-import logger from './util/logger';
-import perform from './util/perform';
+import { createRepository } from './repository/RepositoryFactory';
+import { logger } from './util/logger';
+import { perform } from './util/perform';
 
 /**
  * Startup code. No real unit tests practical here: Will be covered in component tests.
  */
-class ServerController {
+export class ServerController {
     private eigenConfig: EigenConfig;
     private server?: Server;
 
@@ -46,15 +44,25 @@ class ServerController {
     private async bootstrapTenant(tenantConfig: TenantConfig): Promise<TenantInfo> {
         const repository = await createRepository(
             tenantConfig.configRepositoryType,
-            tenantConfig.configRepositoryConfig);
+            tenantConfig.configRepositoryConfig,
+            this.eigenConfig.eigenConfigDir,
+        ).catch(error => Promise.reject(
+            `Unable to create config repository of type ${tenantConfig.configRepositoryType} ` +
+            `with config ${tenantConfig.configRepositoryConfig}: ${error}`));
 
-        const auditLog = await createAuditLog(tenantConfig.auditBackend,
-            tenantConfig.auditBackendConfig);
+        const auditLog = await createAuditLog(
+            tenantConfig.auditBackend,
+            tenantConfig.auditBackendConfig,
+        ).catch(error => Promise.reject(
+            `Unable to create audit backend type ${tenantConfig.auditBackend} ` +
+            `with config ${tenantConfig.auditBackendConfig}: ${error}`));
 
         auditLog.serverStarted(pack.version, tenantConfig);
 
         const startMoment = moment();
-        const { model, meta } = await repository.buildCoreModel();
+        const { model, meta } = await repository.buildCoreModel()
+            .catch(error => Promise.reject(
+                `Unable to build core model: ${error}`));
 
         auditLog.logConfigModelLoaded(`Initial load triggered at ${startMoment.toISOString()}`,
             model.hash(), meta);
@@ -67,18 +75,3 @@ class ServerController {
         } as TenantInfo;
     }
 }
-
-// TODO: maybe add command line parameters to tell where config is
-parseValidEigenConfig(fs.readFileSync('./eigenconfig.yaml', 'utf-8')).then(async result => {
-    logger.info(inspect(result));
-
-    const server = new ServerController(result);
-
-    const signalHandler = () => {
-        server.stop();
-    };
-    process.on('SIGINT', signalHandler);
-    process.on('SIGTERM', signalHandler);
-
-    await server.start();
-}).catch(error => logger.error(error));

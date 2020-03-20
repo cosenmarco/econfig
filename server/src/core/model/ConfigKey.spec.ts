@@ -1,6 +1,6 @@
 import { Dictionary } from 'lodash';
-import ConfigKey from './ConfigKey';
-import ConfigValue from './ConfigValue';
+import { ConfigKey } from './ConfigKey';
+import { ConfigValue } from './ConfigValue';
 
 import { expect } from 'chai';
 import { Mock } from 'ts-mockery';

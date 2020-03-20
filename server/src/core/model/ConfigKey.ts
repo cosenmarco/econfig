@@ -1,6 +1,6 @@
 import { Dictionary } from 'lodash';
 import { filter, flow, map, sortBy } from 'lodash/fp';
-import ConfigValue, { ResolvedConfigValue } from './ConfigValue';
+import { ConfigValue, ResolvedConfigValue } from './ConfigValue';
 
 export interface ResolvedConfigKey {
     key: string;
@@ -8,7 +8,7 @@ export interface ResolvedConfigKey {
     values: ResolvedConfigValue[];
 }
 
-export default class ConfigKey {
+export class ConfigKey {
     private _key: string;
     private description: string;
     private values: ConfigValue[];

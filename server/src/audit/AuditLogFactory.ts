@@ -1,10 +1,10 @@
 import { validateOrReject } from 'class-validator';
-import logValidationErrors from '../util/validationErrorsLogger';
+import { logValidationErrors } from '../util/validationErrorsLogger';
 import { AuditLog } from './AuditLog';
-import FileBasedAuditLog from './file/FileBasedAuditLog';
+import { FileBasedAuditLog } from './file/FileBasedAuditLog';
 import { FileBasedAuditLogConfig } from './file/FileBasedAuditLogConfig';
 
-export default async function createAuditLog(type: string, config: any): Promise<AuditLog> {
+export async function createAuditLog(type: string, config: any): Promise<AuditLog> {
     switch (type) {
         case 'file':
             return validateConfigAndBuildRepository(config, FileBasedAuditLogConfig, FileBasedAuditLog);

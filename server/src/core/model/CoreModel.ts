@@ -1,9 +1,9 @@
 import { Dictionary } from 'lodash';
 import hash from 'object-hash';
 import { UnknownComponentError } from '../errors/UnknownComponentError';
-import Component from './Component';
+import { Component } from './Component';
 
-export default class CoreModel {
+export class CoreModel {
     private components: Map<string, Component>;
 
     constructor(components: Component[]) {

@@ -1,8 +1,8 @@
 import { Dictionary } from 'lodash';
-import ConfigKey, { ResolvedConfigKey } from './ConfigKey';
+import { ConfigKey,  ResolvedConfigKey } from './ConfigKey';
 import { Dimension } from './Dimension';
 
-export default class Component {
+export class Component {
     private _id: string;
     private description: string;
     private configKeys: ConfigKey[];

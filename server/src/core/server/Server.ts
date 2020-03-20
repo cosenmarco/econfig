@@ -1,13 +1,13 @@
 import express from 'express';
 import * as http from 'http';
 import { keyBy } from 'lodash/fp';
-import logger from '../../util/logger';
+import { logger } from '../../util/logger';
 import { EigenConfig } from '../eigenconfig/EigenConfig';
 import { InvalidComponentIdError } from '../errors/InvalidComponentIdError';
 import { InvalidTenantIdError } from '../errors/InvalidTenantIdError';
 import { UnknownTenantError } from '../errors/UnknownTenantError';
 import { TenantModel } from '../model/TenantModel';
-import errorHandlingMiddleware from './errorHandlingMiddleware';
+import { errorMiddleware } from './errorHandlingMiddleware';
 
 const MAX_ID_LEN = 150;
 
@@ -52,7 +52,7 @@ export class Server {
             });
         });
 
-        this.service.use(errorHandlingMiddleware);
+        this.service.use(errorMiddleware);
 
         const port = this.eigenConfig.port;
         this.serviceHandler = this.service.listen(port, () => {

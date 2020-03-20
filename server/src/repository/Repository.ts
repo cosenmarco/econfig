@@ -1,4 +1,4 @@
-import CoreModel from '../core/model/CoreModel';
+import { CoreModel } from '../core/model/CoreModel';
 
 /**
  * A Repository is a service which provides the configuration rules
@@ -6,7 +6,7 @@ import CoreModel from '../core/model/CoreModel';
  * A repository in the end provides an object which has a specific structure
  * and is used to build the core model.
  */
-export default interface Repository {
+export interface Repository {
     /**
      * This method builds the CoreModel starting from a representation of the model
      * in this Repository. It also provides the metadata required by audit log for

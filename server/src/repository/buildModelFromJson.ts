@@ -1,17 +1,17 @@
 import ajv from 'ajv';
 import { keyBy } from 'lodash/fp';
 import { isArray } from 'util';
-import Component from '../core/model/Component.js';
-import ConfigKey from '../core/model/ConfigKey.js';
-import ConfigValue from '../core/model/ConfigValue.js';
-import CoreModel from '../core/model/CoreModel.js';
-import { Dimension, DimensionType } from '../core/model/Dimension.js';
+import { Component } from '../core/model/Component.js';
+import { ConfigKey } from '../core/model/ConfigKey.js';
+import { ConfigValue } from '../core/model/ConfigValue.js';
+import { CoreModel } from '../core/model/CoreModel.js';
+import { Dimension } from '../core/model/Dimension.js';
 import { DimensionValue } from '../core/model/DimensionValue.js';
-import * as schema from './modelSchema-00.01.json';
+import * as schema from './modelSchema-01.json';
 
 const schemaValidator = new ajv();
 
-export default function buildModelFromJson(json: any) {
+export function buildModelFromJson(json: any) {
     const valid = schemaValidator.validate(schema, json);
     if (!valid) {
         throw new Error('Cannot parse the configuration model: ' +
