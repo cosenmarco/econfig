@@ -7,7 +7,7 @@
   "author": "Marco Cosentino",
   "license": "MIT",
   "scripts": {
-    "start": "yarn run serve -f ./example/eigenconfig.yaml -l debug -g econfig-combined.log -k debug",
+    "start": "yarn run serve -f ./example/eigenconfig.yaml -l info -g econfig-combined.log -k silly",
     "clean": "rm -r dist",
     "build": "yarn run build-ts",
     "serve": "node dist/econfig-server.js",

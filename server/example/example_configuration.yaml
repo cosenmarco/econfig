@@ -1,4 +1,4 @@
-version: '0.1'
+version: 1
 components:
   - id: server1
     description: "The central server of the whole Internet"

@@ -18,7 +18,7 @@ export function buildModelFromJson(json: any) {
             schemaValidator.errorsText());
     }
 
-    if (json.version !== '0.1') {
+    if (json.version !== 1) {
         throw new Error(`Unknown model version ${json.version}`);
     }
 

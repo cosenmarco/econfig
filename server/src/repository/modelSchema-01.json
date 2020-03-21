@@ -7,7 +7,7 @@
     "properties": {
         "version": {
             "description": "The version of the schema",
-            "type": "string"
+            "type": "number"
         },
         "components": {
             "description": "The components managed by this server",
@@ -61,7 +61,7 @@
                     "type": "boolean"
                 },
                 "type": {
-                    "description": "The type of values this dimension can assume",                    
+                    "description": "The type of values this dimension can assume",
                     "enum": ["string", "percent"]
                 }
             }

@@ -74,6 +74,7 @@ export class FileRepository implements Repository {
     }
 
     public async shouldReload() {
+        logger.silly(`About to check file ${this.configFilePath} for updates`);
         const { mtimeMs } = await fs.promises.stat(this.configFilePath);
         return mtimeMs > this.mtimeMs;
     }

@@ -5,7 +5,7 @@ import { inspect, isString } from 'util';
 import yargs from 'yargs';
 import { parseValidEigenConfig } from './core/eigenconfig/EigenConfig';
 import { ServerController } from './ServerController';
-import { addFileTransport, consoleTransport, logger } from './util/logger';
+import { addConsoleTransport, addFileTransport, logger } from './util/logger';
 
 const argv = yargs.usage('Usage: $0 [options]')
     .example('$0 -c ./eigenconfig.yaml',
@@ -20,6 +20,7 @@ const argv = yargs.usage('Usage: $0 [options]')
 
     .boolean('c')
     .alias('c', 'no-color')
+    .default('c', true)
     .describe('c', 'disables logs coloring in the console')
 
     .choices('l', ['info', 'debug', 'error', 'silly'])
@@ -41,8 +42,7 @@ const argv = yargs.usage('Usage: $0 [options]')
 const eigenConfigPath = argv.f;
 const logFilePath = argv.g;
 
-consoleTransport.level = argv.l;
-console.log(logFilePath, argv.k);
+addConsoleTransport(argv.l, argv.c);
 
 if (isString(logFilePath)) {
     addFileTransport(logFilePath, argv.k);
