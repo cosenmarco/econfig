@@ -1,12 +1,12 @@
 import ajv from 'ajv';
 import { keyBy } from 'lodash/fp';
 import { isArray } from 'util';
-import { Component } from '../core/model/Component.js';
-import { ConfigKey } from '../core/model/ConfigKey.js';
-import { ConfigValue } from '../core/model/ConfigValue.js';
-import { CoreModel } from '../core/model/CoreModel.js';
-import { Dimension } from '../core/model/Dimension.js';
-import { DimensionValue } from '../core/model/DimensionValue.js';
+import { Component } from '../core/model/Component';
+import { ConfigKey } from '../core/model/ConfigKey';
+import { ConfigValue } from '../core/model/ConfigValue';
+import { CoreModel } from '../core/model/CoreModel';
+import { Dimension } from '../core/model/Dimension';
+import { DimensionValue } from '../core/model/DimensionValue';
 import * as schema from './modelSchema-01.json';
 
 const schemaValidator = new ajv();
