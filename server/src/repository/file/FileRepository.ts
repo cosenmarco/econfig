@@ -33,7 +33,7 @@ export class FileRepository implements Repository {
 
         const configPath = this.configuration.path;
         this.configFilePath = isAbsolute(configPath) ? configPath :
-            join(process.cwd(), this.eigenConfigDir, configPath);
+            join(this.eigenConfigDir, configPath);
     }
 
     public async buildCoreModel() {

@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { dirname } from 'path';
+import { dirname, resolve } from 'path';
 import 'reflect-metadata';
 import { inspect, isString } from 'util';
 import yargs from 'yargs';
@@ -39,7 +39,7 @@ const argv = yargs.usage('Usage: $0 [options]')
 
     .argv;
 
-const eigenConfigPath = argv.f;
+const eigenConfigPath = resolve(argv.f);
 const logFilePath = argv.g;
 
 addConsoleTransport(argv.l, argv.c);

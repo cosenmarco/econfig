@@ -73,10 +73,7 @@ describe('FileRepository', () => {
     ].forEach((testCase: string[]) => {
         const [format, content] = testCase;
         it(`reads configuration file correctly for type ${format} with relative path`, async () => {
-            const tempDir = dirSync({
-                dir: process.cwd(),
-                unsafeCleanup: true,
-            });
+            const tempDir = dirSync({ unsafeCleanup: true });
             const tempFile = fileSync({ dir: tempDir.name });
             fs.writeSync(tempFile.fd, content);
             const configuration = new FileRepositoryConfig({
@@ -84,7 +81,7 @@ describe('FileRepository', () => {
                 path: basename(tempFile.name),
             });
 
-            const repository = new FileRepository(configuration, basename(tempDir.name));
+            const repository = new FileRepository(configuration, tempDir.name);
             const result = await repository.buildCoreModel();
 
             expect(result.model).to.equal(emptyModel);
