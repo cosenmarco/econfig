@@ -17,7 +17,7 @@ export class ServerController {
     private eigenConfig: EigenConfig;
     private server?: Server;
 
-    constructor(eigenConfig: EigenConfig) {
+    public constructor(eigenConfig: EigenConfig) {
         this.eigenConfig = eigenConfig;
     }
 

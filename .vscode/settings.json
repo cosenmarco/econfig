@@ -14,5 +14,8 @@
     ],
     "javascript.preferences.quoteStyle": "single",
     "typescript.preferences.quoteStyle": "single",
-    "typescript.tsdk": "./server/node_modules/typescript/lib"
+    "typescript.tsdk": "./server/node_modules/typescript/lib",
+    "eslint.nodePath": "./server/node_modules/",
+    "eslint.packageManager": "yarn",
+    "eslint.workingDirectories": ["server"]
 }

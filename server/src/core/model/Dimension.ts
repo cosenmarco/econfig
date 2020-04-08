@@ -11,7 +11,7 @@ export class Dimension {
     private dynamic: boolean;
     private _type: DimensionType;
 
-    constructor(id: string, description: string, dynamic: boolean, type: string) {
+    public constructor(id: string, description: string, dynamic: boolean, type: string) {
         this._id = id;
         this._description = description;
         this.dynamic = dynamic;
@@ -21,15 +21,15 @@ export class Dimension {
         }
     }
 
-    get id() {
+    public get id() {
         return this._id;
     }
 
-    get description() {
+    public get description() {
         return this._description;
     }
 
-    get type() {
+    public get type() {
         return this._type;
     }
 

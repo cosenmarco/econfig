@@ -9,13 +9,13 @@ export class DimensionValue {
     public readonly value: any;
     private dimension: Dimension;
 
-    constructor(dimension: Dimension, value: any) {
+    public constructor(dimension: Dimension, value: any) {
         dimension.validateValue(value);
         this.dimension = dimension;
         this.value = value;
     }
 
-    get dimensionId() {
+    public get dimensionId() {
         return this.dimension.id;
     }
 

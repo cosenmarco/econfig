@@ -13,13 +13,13 @@ export class ConfigKey {
     private description: string;
     private values: ConfigValue[];
 
-    constructor(key: string, description: string, values: ConfigValue[]) {
+    public constructor(key: string, description: string, values: ConfigValue[]) {
         this._key = key;
         this.description = description;
         this.values = sortBy(['staticDimensionValuesLength'], values).reverse();
     }
 
-    get key() {
+    public get key() {
         return this._key;
     }
 

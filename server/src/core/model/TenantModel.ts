@@ -21,18 +21,19 @@ export class TenantModel {
     private auditLog: AuditLog;
     private refreshHandler: NodeJS.Timeout;
 
-    constructor(info: TenantInfo) {
+    public constructor(info: TenantInfo) {
         this._id = info.tenantConfig.id;
         this.model = info.model;
         this.repository = info.repository;
         this.auditLog = info.auditLog;
         this.refreshHandler = setInterval(
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             () => this.triggerConfigReload().catch(
                 error => logger.error(`Unable to reload the configuration for tenant ${this._id}: ${error}`)),
             info.tenantConfig.refreshIntervalMillis);
     }
 
-    get id() {
+    public get id() {
         return this._id;
     }
 

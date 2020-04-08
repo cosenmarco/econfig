@@ -12,7 +12,7 @@ export interface Repository {
      * in this Repository. It also provides the metadata required by audit log for
      * traceability purposes
      */
-    buildCoreModel(): Promise<{ model: CoreModel, meta: object}>;
+    buildCoreModel(): Promise<{ model: CoreModel; meta: object}>;
 
     /**
      * This methods tells if the model should be re-built since the last time it was built.

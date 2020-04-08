@@ -11,7 +11,7 @@ export class FileRepositoryConfig {
     @IsNotEmpty()
     public encoding = 'utf-8';
 
-    constructor(config: any) {
+    public constructor(config: any) {
         this.path = config.path;
         this.format = config.format;
         if (isString(config.encoding)) {

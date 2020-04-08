@@ -17,7 +17,7 @@ export class Server {
     private serviceHandler: http.Server;
     private tenants: { [id: string ]: TenantModel};
 
-    constructor(eigenConfig: EigenConfig, tenantModels: TenantModel[]) {
+    public constructor(eigenConfig: EigenConfig, tenantModels: TenantModel[]) {
         this.eigenConfig = eigenConfig;
         this.tenants = keyBy((model: TenantModel) => model.id)(tenantModels);
         this.service = express();

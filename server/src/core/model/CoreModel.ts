@@ -6,7 +6,7 @@ import { Component } from './Component';
 export class CoreModel {
     private components: Map<string, Component>;
 
-    constructor(components: Component[]) {
+    public constructor(components: Component[]) {
         // Index the components by id so it's easier to find them.
         this.components = new Map(components.map(item => [item.id, item]));
     }

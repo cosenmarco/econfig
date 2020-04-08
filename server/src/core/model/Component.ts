@@ -8,18 +8,18 @@ export class Component {
     private configKeys: ConfigKey[];
     private _dimensions: Dimension[];
 
-    constructor(id: string, description: string, configKeys: ConfigKey[], dimensions: Dimension[]) {
+    public constructor(id: string, description: string, configKeys: ConfigKey[], dimensions: Dimension[]) {
         this._id = id;
         this.description = description;
         this.configKeys = configKeys;
         this._dimensions = dimensions;
     }
 
-    get id() {
+    public get id() {
         return this._id;
     }
 
-    get dimensions() {
+    public get dimensions() {
         return this._dimensions;
     }
 

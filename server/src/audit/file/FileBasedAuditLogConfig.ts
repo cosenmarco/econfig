@@ -9,7 +9,7 @@ export class FileBasedAuditLogConfig {
 
     public identifier: string;
 
-    constructor(config: any) {
+    public constructor(config: any) {
         this.path = config.path;
         this.format = config.format;
         this.identifier = config.identifier;

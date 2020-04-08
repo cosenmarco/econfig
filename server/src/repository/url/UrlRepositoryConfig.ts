@@ -7,7 +7,7 @@ export class UrlRepositoryConfig {
     @IsIn(['json', 'yaml'])
     public format: string;
 
-    constructor(config: any) {
+    public constructor(config: any) {
         this.url = config.url;
         this.format = config.format;
     }

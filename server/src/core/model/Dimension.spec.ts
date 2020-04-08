@@ -13,7 +13,7 @@ describe('Dimension', () => {
 
     it('must have a valid type', () => {
         expect(() => {
-            const dim = new Dimension('test', 'test', false, 'wrong');
+            new Dimension('test', 'test', false, 'wrong');
         }).to.throw();
     });
 
@@ -55,8 +55,8 @@ describe('Dimension', () => {
     it('matches correctly a string value', () => {
         const dim = new Dimension('test_id', 'test_desc', false, 'string');
         // tslint:disable: no-unused-expression
-        expect(dim.matchValue('test_val', 'test_val')).to.be.true;
-        expect(dim.matchValue('test_val', 'test_other_val')).to.be.false;
+        expect(dim.matchValue('test_val', 'test_val')).to.equal(true);
+        expect(dim.matchValue('test_val', 'test_other_val')).to.equal(false);
         // tslint:enable: no-unused-expression
     });
 });

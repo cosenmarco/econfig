@@ -16,7 +16,7 @@ value0: 42
 string0: string
 list0: [ a, b, c ]`;
 
-const testJson = `{ "value0": 42, "string0": "string", "list0": [ "a", "b", "c" ]}`;
+const testJson = '{ "value0": 42, "string0": "string", "list0": [ "a", "b", "c" ]}';
 
 describe('FileRepository', () => {
     let buildModelSpy: SinonStub;

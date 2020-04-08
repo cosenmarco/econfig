@@ -4,19 +4,18 @@
  */
 export class EconfigError extends Error {
 
-    public static fromError(error: Error) {
-        return new EconfigError('GENERIC_ERROR', error.message, 500);
-    }
-
     public readonly code: string;
     public readonly message: string;
     public readonly statusCode: number;
 
-    constructor(code: string, message: string, statusCode?: number) {
+    public constructor(code: string, message: string, statusCode?: number) {
         super(message);
         this.code = code;
         this.message = message;
         this.statusCode = statusCode || 500;
     }
 
+    public static fromError(error: Error) {
+        return new EconfigError('GENERIC_ERROR', error.message, 500);
+    }
 }
