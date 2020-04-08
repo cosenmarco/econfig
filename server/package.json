@@ -5,7 +5,7 @@
   "main": "dist/econfig-server.js",
   "repository": "https://github.com/cosenmarco/econfig",
   "author": "Marco Cosentino",
-  "license": "GPLv3",
+  "license": "GPL-3.0-or-later",
   "scripts": {
     "start": "yarn run serve -f ./example/eigenconfig.yaml -l info -g econfig-combined.log -k silly",
     "clean": "rm -r dist",
@@ -99,5 +99,8 @@
     "request-promise-native": "^1.0.7",
     "winston": "^3.2.1",
     "yargs": "^15.3.1"
+  },
+  "resolutions": {
+    "minimist": "^0.2.1"
   }
 }

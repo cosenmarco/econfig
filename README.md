@@ -77,6 +77,7 @@ Non goals:
 * Canary or blue / green deployments
 * Multivariate tests
 * Secret management
+* Fine tuning
 
 ## Core model
 
