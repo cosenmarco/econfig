@@ -86,7 +86,7 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
-    "ajv": "^6.10.2",
+    "ajv": "^6.12.3",
     "class-validator": "^0.10.0",
     "express": "^4.17.1",
     "inversify": "^5.0.1",
